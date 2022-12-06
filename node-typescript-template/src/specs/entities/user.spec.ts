@@ -16,7 +16,6 @@ describe('User', function () {
     })
 
     beforeEach(async function () {
-        // TODO: drop the content of the user table between each it().
         await datasource.getRepository(User).clear()
     })
 
@@ -39,8 +38,15 @@ describe('User', function () {
 
         it('should raise error if email is missing', async function () {
             // hint to check if a promise fails with chai + chai-as-promise:
-            // const promise = datasource.getRepository(User).save()
-            // await chai.expect(promise).to.eventually.be.rejectedWith(QueryFailedError, "message")
+            const promise = datasource.getRepository(User).save({
+                email: undefined,
+                passwordHash: "", 
+                firstName: "hello", 
+                lastName: "world", 
+                id: 0, 
+                emanpm: 0
+            })
+            await chai.expect(promise).to.eventually.be.rejectedWith(QueryFailedError, 'null value in column "email" of relation "user" violates not-null constraint')
         })
     })
 })
