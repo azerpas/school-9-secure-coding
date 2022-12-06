@@ -10,3 +10,4 @@
 ## How to run
 - Install [Docker](https://www.docker.com/) and [Docker Compose](https://docs.docker.com/compose/)
 - Run `docker compose up -d` in the root directory of the project
+- Run `npm run dev` in the root directory of the project to start the server
