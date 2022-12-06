@@ -1,5 +1,9 @@
 # SE 1 - Project
 
+- [Stack](#stack)
+- [How to run](#how-to-run)
+- [How to run tests](#how-to-run-tests)
+
 ## Stack
 - [TypeScript](https://www.typescriptlang.org/)
 - [TypeORM](https://typeorm.io/#/)
@@ -17,3 +21,6 @@
 We're using Mocha and a specific database `postgres-test` created in the docker-compose file for the tests.
 - Run `docker compose up -d` in the root directory of the project
 - Run `npm run test` in the root directory of the project
+
+## Exercises
+- [Exercise 2](./exercises/Exercise2.md)
