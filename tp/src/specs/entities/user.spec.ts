@@ -48,11 +48,6 @@ describe('User', function () {
                 emanpm: 0
             })
             const promise = datasource.getRepository(User).save(user)
-            /*
-            await expect(promise).to.eventually
-                .be.rejectedWith(ValidationError, "User.email is undefined")
-                .and.include({ target: user, property: 'email' })
-            */
             await expect(promise).to.eventually.be.rejected.and.deep.include({
                     target: user,
                     property: 'email',
