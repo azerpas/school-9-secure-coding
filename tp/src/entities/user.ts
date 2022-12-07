@@ -1,8 +1,9 @@
-import { IsEmpty, IsNotEmpty } from "class-validator"
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm"
+import { IsNotEmpty } from "class-validator"
+import { Entity, PrimaryGeneratedColumn, Column, Unique } from "typeorm"
 
 
 @Entity()
+@Unique(["email"])
 export class User {
 	@PrimaryGeneratedColumn()
 	id!: number;
@@ -16,10 +17,17 @@ export class User {
 	@Column()
 	emanpm!: number;
 
-
-  @Column()
-  @IsNotEmpty({ message: "User.email is undefined" })
-  email!: string;
+    @Column({
+        transformer: {
+            from: (value: string) => value.toLowerCase(),
+            to: (value: unknown) => {
+                if (typeof value === "string") return value.toLowerCase()
+                else return value
+            }
+        }
+    })
+    @IsNotEmpty({ message: "User.email is undefined" })
+    email!: string;
 
 
 	@Column({ length: 60 })

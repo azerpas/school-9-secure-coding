@@ -15,21 +15,20 @@ export class UserSubscriber implements EntitySubscriberInterface<User> {
         const errors = await validate(entity)
         if (errors.length > 0)
             throw errors[0]
+            
     }
 
     /**
      * Called before User insertion.
      */
     async beforeInsert(event: InsertEvent<User>) {
-        console.log(`BEFORE POST INSERTED: `, event.entity)
-        this.validate(event.entity)
+        await this.validate(event.entity)
     }
 
     /**
      * Called before User update.
      */
     async beforeUpdate(event: UpdateEvent<User>) {
-        console.log(`BEFORE POST UPDATED: `, event.entity)
-        this.validate(event.databaseEntity)
+        await this.validate(event.databaseEntity)
     }
 }

@@ -2,9 +2,8 @@ import * as chai from 'chai'
 import * as chaiAsPromised from 'chai-as-promised'
 import { User } from '@entities/index'
 import { getAppDataSource } from '@lib/typeorm'
-import { DataSource } from 'typeorm'
+import { DataSource, QueryFailedError } from 'typeorm'
 import { expect } from 'chai'
-import { ValidationError } from 'validators/validation.error'
 
 chai.use(chaiAsPromised)
 
@@ -49,10 +48,26 @@ describe('User', function () {
             })
             const promise = datasource.getRepository(User).save(user)
             await expect(promise).to.eventually.be.rejected.and.deep.include({
-                    target: user,
-                    property: 'email',
-                    constraints: { isNotEmpty: "User.email is undefined" }
-                })
+                target: user,
+                property: 'email',
+                constraints: { isNotEmpty: "User.email is undefined" }
+            })
+        })
+
+        it('should raise error if email is not unique', async function () {
+            const user = datasource.getRepository(User).create({
+                email: "salut@gmail.com",
+                passwordHash: "", firstName: "hello",  lastName: "world", 
+                id: 0, emanpm: 0
+            })
+            const user2 = datasource.getRepository(User).create({
+                email: "SALUT@gmail.com",
+                passwordHash: "", firstName: "hello",  lastName: "world", 
+                id: 1, emanpm: 0
+            })
+            await datasource.getRepository(User).save(user)
+            const promise = datasource.getRepository(User).save(user2)
+            await expect(promise).to.eventually.be.rejectedWith(QueryFailedError, /duplicate key value violates unique constraint/)
         })
     })
 })
