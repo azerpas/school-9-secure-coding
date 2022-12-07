@@ -1,4 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import { IsEmpty, IsNotEmpty } from "class-validator"
+import { Entity, PrimaryGeneratedColumn, Column } from "typeorm"
+
 
 @Entity()
 export class User {
@@ -14,8 +16,11 @@ export class User {
 	@Column()
 	emanpm!: number;
 
-	@Column()
-	email!: string;
+
+  @Column()
+  @IsNotEmpty({ message: "User.email is undefined" })
+  email!: string;
+
 
 	@Column({ length: 60 })
 	passwordHash!: string;
