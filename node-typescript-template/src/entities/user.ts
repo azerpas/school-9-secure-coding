@@ -15,5 +15,8 @@ export class User {
     emanpm!: number
 
     @Column()
+    email!: string
+
+    @Column()
     passwordHash!: string
 }
