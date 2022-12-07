@@ -4,6 +4,7 @@ import { User } from '@entities/index'
 import { getAppDataSource } from '@lib/typeorm'
 import { DataSource, QueryFailedError } from 'typeorm'
 import { expect } from 'chai'
+import { ValidationError } from 'validators/validation.error'
 
 chai.use(chaiAsPromised)
 
@@ -38,15 +39,18 @@ describe('User', function () {
 
         it('should raise error if email is missing', async function () {
             // hint to check if a promise fails with chai + chai-as-promise:
-            const promise = datasource.getRepository(User).save({
+            const user = {
                 email: undefined,
                 passwordHash: "", 
                 firstName: "hello", 
                 lastName: "world", 
                 id: 0, 
                 emanpm: 0
-            })
-            await chai.expect(promise).to.eventually.be.rejectedWith(QueryFailedError, 'null value in column "email" of relation "user" violates not-null constraint')
+            }
+            const promise = datasource.getRepository(User).save(user)
+            await expect(promise).to.eventually
+                .be.rejectedWith(ValidationError, "User.email is undefined")
+                .and.include({ target: user, property: 'email' })
         })
     })
 })

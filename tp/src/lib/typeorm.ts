@@ -1,6 +1,7 @@
 import { DataSource } from "typeorm";
 import { User } from "@entities/index";
 import 'dotenv/config'
+import { UserSubscriber } from "subscribers";
 
 export const getAppDataSource = (): DataSource => {
     if (!process.env.POSTGRES_HOST) throw new Error("POSTGRES_HOST is not defined")
@@ -19,7 +20,7 @@ export const getAppDataSource = (): DataSource => {
         synchronize: true,
         logging: true,
         entities: [User],
-        subscribers: [],
+        subscribers: [UserSubscriber],
         migrations: [],
     })
 }
