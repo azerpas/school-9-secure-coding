@@ -2,7 +2,7 @@ import * as chai from 'chai'
 import * as chaiAsPromised from 'chai-as-promised'
 import { User } from '@entities/index'
 import { getAppDataSource } from '@lib/typeorm'
-import { DataSource, QueryFailedError } from 'typeorm'
+import { DataSource } from 'typeorm'
 import { expect } from 'chai'
 import { ValidationError } from 'validators/validation.error'
 
@@ -39,18 +39,25 @@ describe('User', function () {
 
         it('should raise error if email is missing', async function () {
             // hint to check if a promise fails with chai + chai-as-promise:
-            const user = {
+            const user = datasource.getRepository(User).create({
                 email: undefined,
                 passwordHash: "", 
                 firstName: "hello", 
                 lastName: "world", 
                 id: 0, 
                 emanpm: 0
-            }
+            })
             const promise = datasource.getRepository(User).save(user)
+            /*
             await expect(promise).to.eventually
                 .be.rejectedWith(ValidationError, "User.email is undefined")
                 .and.include({ target: user, property: 'email' })
+            */
+            await expect(promise).to.eventually.be.rejected.and.deep.include({
+                    target: user,
+                    property: 'email',
+                    constraints: { isNotEmpty: "User.email is undefined" }
+                })
         })
     })
 })
