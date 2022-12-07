@@ -11,14 +11,18 @@ export class UserSubscriber implements EntitySubscriberInterface<User> {
         return User
     }
 
+    async validate(entity: User) {
+        const errors = await validate(entity)
+        if (errors.length > 0)
+            throw errors[0]
+    }
+
     /**
      * Called before User insertion.
      */
     async beforeInsert(event: InsertEvent<User>) {
         console.log(`BEFORE POST INSERTED: `, event.entity)
-        const errors = await validate(event.entity)
-        if (errors.length > 0)
-            throw errors[0]
+        this.validate(event.entity)
     }
 
     /**
@@ -26,8 +30,6 @@ export class UserSubscriber implements EntitySubscriberInterface<User> {
      */
     async beforeUpdate(event: UpdateEvent<User>) {
         console.log(`BEFORE POST UPDATED: `, event.entity)
-        const errors = await validate(event.databaseEntity)
-        if (errors.length > 0)
-            throw errors[0]
+        this.validate(event.databaseEntity)
     }
 }
