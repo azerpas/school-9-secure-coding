@@ -1,4 +1,5 @@
 import { IsNotEmpty } from "class-validator"
+import { UniqueInColumn } from "decorators";
 import { Entity, PrimaryGeneratedColumn, Column, Unique } from "typeorm"
 
 
@@ -26,6 +27,7 @@ export class User {
             }
         }
     })
+    @UniqueInColumn({ message: "User.email is not unique" })
     @IsNotEmpty({ message: "User.email is undefined" })
     email!: string;
 
