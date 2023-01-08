@@ -1,6 +1,7 @@
 import { IsNotEmpty } from "class-validator"
 import { UniqueInColumn } from "decorators";
 import { Entity, PrimaryGeneratedColumn, Column, Unique } from "typeorm"
+import * as bcrypt from "bcrypt"
 
 
 @Entity()
@@ -34,4 +35,11 @@ export class User {
 
 	@Column({ length: 60 })
 	passwordHash!: string;
+
+    async setPassword(password: string, passwordConfirmation: string) {
+        if (password !== passwordConfirmation) throw new Error("Passwords do not match")
+        else {
+            this.passwordHash = await bcrypt.hash(password, 10)
+        }
+    }
 }
