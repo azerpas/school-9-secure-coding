@@ -20,18 +20,24 @@ describe('User', function () {
         await datasource.getRepository(User).clear()
     })
 
+    const generateUser = (email?: string): User => {
+        return datasource.getRepository(User).create({
+            email,
+            passwordHash: "", 
+            firstName: "hello", 
+            lastName: "world", 
+            id: 0, 
+            emanpm: 0
+        })
+    }
+
     describe('validations', function () {
         it('should create a new User in database', async () => {
+            const newUser = generateUser("hello@world.com")
+            await newUser.setPassword("@di$cR#t#PPsW0Rd", "@di$cR#t#PPsW0Rd")
             await datasource
                 .getRepository(User)
-                .save({
-                    email: "",
-                    passwordHash: "", 
-                    firstName: "hello", 
-                    lastName: "world", 
-                    id: 0, 
-                    emanpm: 0
-                } as User)
+                .save(newUser)
             const user = await datasource.getRepository(User).findOne({where: {firstName: "hello"}})
             expect(user).to.not.be.null
             expect(user?.firstName).to.equal("hello")
@@ -39,14 +45,7 @@ describe('User', function () {
 
         it('should raise error if email is missing', async function () {
             // hint to check if a promise fails with chai + chai-as-promise:
-            const user = datasource.getRepository(User).create({
-                email: undefined,
-                passwordHash: "", 
-                firstName: "hello", 
-                lastName: "world", 
-                id: 0, 
-                emanpm: 0
-            })
+            const user = generateUser(undefined)
             const promise = datasource.getRepository(User).save(user)
             await expect(promise).to.eventually.be.rejected.and.deep.include({
                 target: user,
@@ -56,16 +55,8 @@ describe('User', function () {
         })
 
         it('should raise error if email is not unique', async function () {
-            const user = datasource.getRepository(User).create({
-                email: "salut@gmail.com",
-                passwordHash: "", firstName: "hello",  lastName: "world", 
-                id: 0, emanpm: 0
-            })
-            const user2 = datasource.getRepository(User).create({
-                email: "SALUT@gmail.com",
-                passwordHash: "", firstName: "hello",  lastName: "world", 
-                id: 1, emanpm: 0
-            })
+            const user = generateUser("salut@gmail.com")
+            const user2 = generateUser("SALUT@gmail.com")
             await datasource.getRepository(User).save(user)
             const promise = datasource.getRepository(User).save(user2)
             //await expect(promise).to.eventually.be.rejectedWith(QueryFailedError, /duplicate key value violates unique constraint/)
