@@ -2,7 +2,7 @@ import { IsNotEmpty } from "class-validator"
 import { UniqueInColumn } from "decorators";
 import { Entity, PrimaryGeneratedColumn, Column, Unique } from "typeorm"
 import * as bcrypt from "bcrypt"
-
+import { validatePassword } from "@lib/password";
 
 @Entity()
 @Unique(["email"])
@@ -40,6 +40,7 @@ export class User {
         const { password, passwordConfirmation } = params
         if (password !== passwordConfirmation) throw new Error("Passwords do not match")
         else {
+            if (!validatePassword(password).result) throw new Error("Password is not strong enough")
             this.passwordHash = await bcrypt.hash(password, 10)
         }
     }

@@ -4,7 +4,8 @@ import { User } from '@entities/index'
 import { getAppDataSource } from '@lib/typeorm'
 import { DataSource, QueryFailedError } from 'typeorm'
 import { expect } from 'chai'
-import { ValidationError } from 'class-validator'
+// import { ValidationError } from 'class-validator'
+
 
 chai.use(chaiAsPromised)
 
@@ -65,6 +66,12 @@ describe('User', function () {
                 property: 'email',
                 constraints: { UniqueInColumnConstraint: "User.email is not unique" }
             })
+        })
+
+        it('should raise error if password is not strong enough', async function () {
+            const user = generateUser("hello@wolrd.com")
+            expect(user.setPassword({password: "weak", passwordConfirmation: "weak"}))
+                .to.be.rejectedWith(Error, "Password is not strong enough")
         })
     })
 })
