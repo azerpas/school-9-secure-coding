@@ -32,14 +32,19 @@ describe('User', function () {
         })
     }
 
+    const createUser = async (email: string = "hello@world.com", password: string = "@di$cR#t#PPsW0Rd"): Promise<User> => {
+        const user = generateUser(email)
+        await user.setPassword({password, passwordConfirmation: password})
+        await datasource
+            .getRepository(User)
+            .save(user)
+        return user
+    }
+
     describe('validations', function () {
         it('should create a new User in database', async () => {
-            const newUser = generateUser("hello@world.com")
-            await newUser.setPassword({password: "@di$cR#t#PPsW0Rd", passwordConfirmation: "@di$cR#t#PPsW0Rd"})
-            await datasource
-                .getRepository(User)
-                .save(newUser)
-            const user = await datasource.getRepository(User).findOne({where: {firstName: "hello"}})
+            const newUser = await createUser()
+            const user = await datasource.getRepository(User).findOne({where: {firstName: newUser.firstName}})
             expect(user).to.not.be.null
             expect(user?.firstName).to.equal("hello")
         })
@@ -72,6 +77,14 @@ describe('User', function () {
             const user = generateUser("hello@wolrd.com")
             expect(user.setPassword({password: "weak", passwordConfirmation: "weak"}))
                 .to.be.rejectedWith(Error, "Password is not strong enough")
+        })
+    })
+
+    describe('password', function () {
+        it('should be able to validate a user password', async function () {
+            const newUser = await createUser("hello@world.com", "@di$cR#t#PPsW0Rd")
+            const user = await datasource.getRepository(User).findOne({where: {firstName: newUser.firstName}})
+            expect(await user?.isPasswordValid("@di$cR#t#PPsW0Rd")).to.be.true
         })
     })
 })
