@@ -36,10 +36,16 @@ export class User {
 	@Column({ length: 60 })
 	passwordHash!: string;
 
-    async setPassword(password: string, passwordConfirmation: string) {
+    async setPassword(params: SetPasswordDTO) {
+        const { password, passwordConfirmation } = params
         if (password !== passwordConfirmation) throw new Error("Passwords do not match")
         else {
             this.passwordHash = await bcrypt.hash(password, 10)
         }
     }
+}
+
+export interface SetPasswordDTO {
+    password: string
+    passwordConfirmation: string
 }

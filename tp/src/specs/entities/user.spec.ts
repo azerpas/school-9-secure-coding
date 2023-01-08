@@ -34,7 +34,7 @@ describe('User', function () {
     describe('validations', function () {
         it('should create a new User in database', async () => {
             const newUser = generateUser("hello@world.com")
-            await newUser.setPassword("@di$cR#t#PPsW0Rd", "@di$cR#t#PPsW0Rd")
+            await newUser.setPassword({password: "@di$cR#t#PPsW0Rd", passwordConfirmation: "@di$cR#t#PPsW0Rd"})
             await datasource
                 .getRepository(User)
                 .save(newUser)
