@@ -44,6 +44,10 @@ export class User {
             this.passwordHash = await bcrypt.hash(password, 10)
         }
     }
+
+    async isPasswordValid(password: string) {
+        return bcrypt.compare(password, this.passwordHash)
+    }
 }
 
 export interface SetPasswordDTO {
