@@ -20,14 +20,14 @@ export const getPasswordEntropy = (password: string): number => {
     return entropy;
 }
 
-export const validatePassword = (password: string): boolean => {
+export const validatePassword = (password: string): {result: boolean, entropy: number} => {
     const minEntropy = 80;  // minimum entropy in bits
-    const passwordEntropy = getPasswordEntropy(password);  // compute the entropy of the password
+    const entropy = getPasswordEntropy(password);  // compute the entropy of the password
 
-    if (passwordEntropy >= minEntropy) {
-        return true;
+    if (entropy >= minEntropy) {
+        return {result: true, entropy};
     } else {
-        return false;
+        return {result: false, entropy};
     }
 }
 
