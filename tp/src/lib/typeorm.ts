@@ -24,3 +24,8 @@ export const getAppDataSource = (): DataSource => {
         migrations: [],
     })
 }
+
+export const getAppDataSourceInitialized = async (): Promise<DataSource> => {
+    const datasource: DataSource = getAppDataSource()
+    return datasource.initialize()
+}
