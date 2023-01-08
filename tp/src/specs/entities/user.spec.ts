@@ -4,6 +4,7 @@ import { User } from '@entities/index'
 import { getAppDataSource } from '@lib/typeorm'
 import { DataSource, QueryFailedError } from 'typeorm'
 import { expect } from 'chai'
+import { ValidationError } from 'class-validator'
 
 chai.use(chaiAsPromised)
 
@@ -67,7 +68,12 @@ describe('User', function () {
             })
             await datasource.getRepository(User).save(user)
             const promise = datasource.getRepository(User).save(user2)
-            await expect(promise).to.eventually.be.rejectedWith(QueryFailedError, /duplicate key value violates unique constraint/)
+            //await expect(promise).to.eventually.be.rejectedWith(QueryFailedError, /duplicate key value violates unique constraint/)
+            await expect(promise).to.eventually.be.rejected.and.deep.include({
+                target: user2,
+                property: 'email',
+                constraints: { UniqueInColumnConstraint: "User.email is not unique" }
+            })
         })
     })
 })
