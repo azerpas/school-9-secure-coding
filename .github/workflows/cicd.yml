@@ -20,8 +20,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18.x
-          cache: 'npm'
-          cache-dependency-path: 'package-lock.json'
       - run: npm ci
       - run: npm test
   build:
