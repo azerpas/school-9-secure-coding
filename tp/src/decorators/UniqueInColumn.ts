@@ -1,5 +1,5 @@
 import { User } from '@entities/user';
-import { getAppDataSource, getAppDataSourceInitialized } from '@lib/typeorm';
+import { getAppDataSourceInitialized } from '@lib/typeorm';
 import { registerDecorator, ValidationOptions, ValidationArguments, ValidatorConstraint, ValidatorConstraintInterface } from 'class-validator';
 
 @ValidatorConstraint({ async: true })
