@@ -6,6 +6,7 @@ export const getPasswordEntropy = (password: string): number => {
         ':', ';', '<', '=', '>', '?', '@', '[', '\\', ']', '^', '_', '`', '{', '|', '}', '~'
     ];
     const passwordLength = password.length;
+    const log2CharacterSet = Math.log2(characterSet.length)
     let entropy = 0;
 
     // calculate the entropy of the password
@@ -13,7 +14,7 @@ export const getPasswordEntropy = (password: string): number => {
         const character = password[i];
 
         if (characterSet.includes(character)) {
-            entropy += Math.log2(characterSet.length);
+            entropy += log2CharacterSet;
         }
     }
 
