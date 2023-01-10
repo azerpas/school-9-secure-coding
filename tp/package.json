@@ -7,6 +7,7 @@
     "build": "rm -fr dist && tsc",
     "lint": "eslint --fix src",
     "test": "NODE_ENV=test mocha --require ts-node/register --recursive src/**/*.spec.ts --exit --async-stack-traces",
+    "ci-test": "NODE_ENV=test mocha --require ts-node/register --recursive src/specs/lib/*.spec.ts --exit --async-stack-traces",
     "dev": "npx nodemon ./src/index.ts"
   },
   "author": "Thomas VEILLARD",
