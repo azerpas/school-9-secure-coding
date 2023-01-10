@@ -5,9 +5,9 @@ env:
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "school-9-devops" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "school-9-devops" ]
 
 jobs:
   unit-tests:
