@@ -24,6 +24,9 @@ jobs:
       - run: npm run ci-test
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: tp
     needs: unit-tests
     steps:
     - uses: actions/checkout@v3
