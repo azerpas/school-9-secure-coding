@@ -1,0 +1,16 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "title": "CreateSessionResponseBody",
+    "required": ["email", "password"],
+    "properties": {
+      "email": {
+        "type": "string"
+      },
+      "password": {
+        "type": "string"
+      }
+    },
+    "additionalProperties": false
+  }
+  
