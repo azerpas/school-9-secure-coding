@@ -3,6 +3,11 @@ module.exports = {
   env: { node: true },
   parser: '@typescript-eslint/parser',
   plugins: [ '@typescript-eslint' ],
+  parserOptions: {
+    project: './tsconfig.json',
+    tsconfigRootDir: __dirname,
+    sourceType: 'module'
+  },
   extends: [
     'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
@@ -20,5 +25,6 @@ module.exports = {
     '@typescript-eslint/no-explicit-any': 'off',
 
     // Feel free to enable/disable some rules depending on your needs.
+    'indent': [ 'error', 4 ],
   }
 }
