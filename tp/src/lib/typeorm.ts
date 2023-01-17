@@ -1,7 +1,7 @@
-import { DataSource } from "typeorm";
-import { User } from "@entities/index";
+import { DataSource } from "typeorm"
+import { User } from "@entities/index"
 import 'dotenv/config'
-import { UserSubscriber } from "subscribers";
+import { UserSubscriber } from "subscribers"
 
 /**
  * Caching the appDataSource value to avoid creating multiple connections to the database

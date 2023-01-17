@@ -1,23 +1,24 @@
+/* eslint-disable indent */
 import { IsNotEmpty } from "class-validator"
-import { UniqueInColumn } from "decorators";
+import { UniqueInColumn } from "decorators"
 import { Entity, PrimaryGeneratedColumn, Column, Unique } from "typeorm"
 import * as bcrypt from "bcrypt"
-import { validatePassword } from "@lib/password";
+import { validatePassword } from "@lib/password"
 
 @Entity()
 @Unique(["email"])
 export class User {
 	@PrimaryGeneratedColumn()
-	id!: number;
+	id!: number
 
 	@Column({ length: 64 })
-	firstName!: string;
+	firstName!: string
 
 	@Column({ length: 64 })
-	lastName!: string;
+	lastName!: string
 
 	@Column()
-	emanpm!: number;
+	emanpm!: number
 
     @Column({
         transformer: {
@@ -30,11 +31,11 @@ export class User {
     })
     @UniqueInColumn({ message: "User.email is not unique" })
     @IsNotEmpty({ message: "User.email is undefined" })
-    email!: string;
+    email!: string
 
 
 	@Column({ length: 60 })
-	passwordHash!: string;
+	passwordHash!: string
 
     async setPassword(params: SetPasswordDTO) {
         const { password, passwordConfirmation } = params

@@ -1,8 +1,8 @@
 import * as chai from 'chai'
-import * as chaiAsPromised from 'chai-as-promised'
+import chaiAsPromised from 'chai-as-promised'
 import { User } from '@entities/index'
 import { getAppDataSourceInitialized } from '@lib/typeorm'
-import { DataSource, QueryFailedError } from 'typeorm'
+import { DataSource } from 'typeorm'
 import { expect } from 'chai'
 // import { ValidationError } from 'class-validator'
 
@@ -32,7 +32,7 @@ describe('User', function () {
         })
     }
 
-    const createUser = async (email: string = "hello@world.com", password: string = "@di$cR#t#PPsW0Rd"): Promise<User> => {
+    const createUser = async (email = "hello@world.com", password = "@di$cR#t#PPsW0Rd"): Promise<User> => {
         const user = generateUser(email)
         await user.setPassword({password, passwordConfirmation: password})
         await datasource
@@ -75,7 +75,7 @@ describe('User', function () {
 
         it('should raise error if password is not strong enough', async function () {
             const user = generateUser("hello@wolrd.com")
-            expect(user.setPassword({password: "weak", passwordConfirmation: "weak"}))
+            await expect(user.setPassword({password: "weak", passwordConfirmation: "weak"}))
                 .to.be.rejectedWith(Error, "Password is not strong enough")
         })
     })
