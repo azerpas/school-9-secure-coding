@@ -30,3 +30,4 @@ We're using Mocha and a specific database `postgres-test` created in the docker-
 
 - [Exercise 2](./exercises/Exercise2.md)
 - [Exercise 4](./exercises/Exercise4.md)
+- [HTTP Questions](./exercises/HttpEndpointsQuestions.md)
