@@ -8,8 +8,8 @@ import { validatePassword } from "@lib/password"
 @Entity()
 @Unique(["email"])
 export class User {
-	@PrimaryGeneratedColumn()
-	id!: number
+	@PrimaryGeneratedColumn("uuid")
+	id!: string
 
 	@Column({ length: 64 })
 	firstName!: string
