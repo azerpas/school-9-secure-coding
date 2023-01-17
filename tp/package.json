@@ -8,7 +8,8 @@
     "lint": "eslint --fix src",
     "test": "NODE_ENV=test mocha --require ts-node/register --recursive src/**/*.spec.ts --exit --async-stack-traces",
     "ci-test": "NODE_ENV=test mocha --require ts-node/register --recursive src/specs/lib/*.spec.ts --exit --async-stack-traces",
-    "dev": "npx nodemon ./src/index.ts"
+    "dev": "npx nodemon ./src/index.ts",
+    "schemas": "json2ts -i 'src/schemas/json/**/*.json' -o src/schemas/types"
   },
   "author": "Thomas VEILLARD",
   "license": "ISC",
@@ -22,6 +23,7 @@
     "chai": "^4.3.7",
     "chai-as-promised": "^7.1.1",
     "eslint": "^8.2.0",
+    "json-schema-to-typescript": "^11.0.2",
     "mocha": "^10.1.0",
     "nodemon": "^2.0.20",
     "ts-node": "^10.9.1",
@@ -35,7 +37,6 @@
     "class-validator": "^0.13.2",
     "dotenv": "^16.0.3",
     "fastify": "^4.11.0",
-    "json-schema-to-ts": "^2.6.2",
     "pg": "^8.8.0",
     "reflect-metadata": "^0.1.13",
     "typeorm": "^0.3.10"
