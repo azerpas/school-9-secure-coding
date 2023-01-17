@@ -5,8 +5,24 @@
 	"properties": {
 		"id": {
 			"type": "string"
+		},
+		"session": {
+			"user": {
+				"id": {
+					"type": "string"
+				},
+				"email": {
+					"type": "string"
+				},
+				"firstname": {
+					"type": "string"
+				},
+				"lastname": {
+					"type": "string"
+				}
+			}	
 		}
 	},
-	"required": ["id"],
+	"required": ["id", "session"],
 	"additionalProperties": false
 }
