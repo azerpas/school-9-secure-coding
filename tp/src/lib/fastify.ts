@@ -2,7 +2,7 @@ import fastify from 'fastify'
 import cookie, { FastifyCookieOptions } from '@fastify/cookie'
 import { createSessionRequestBody, createUserRequestBody, createUserResponseBody } from '@schemas/json'
 
-const server = fastify()
+export const server = fastify()
     .addSchema(createSessionRequestBody)
     .addSchema(createUserRequestBody)
     .addSchema(createUserResponseBody)
