@@ -29,6 +29,8 @@ export class UserSubscriber implements EntitySubscriberInterface<User> {
      * Called before User update.
      */
     async beforeUpdate(event: UpdateEvent<User>) {
+        if(!(event.entity instanceof event.databaseEntity.constructor))
+        throw new Error("Expected entity to be an entity instance not a literal object.")
         await this.validate(event.databaseEntity)
     }
 }
