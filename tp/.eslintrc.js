@@ -26,5 +26,6 @@ module.exports = {
 
     // Feel free to enable/disable some rules depending on your needs.
     'indent': [ 'error', 4 ],
+    'semi': [ 'error', 'never' ],
   }
 }
