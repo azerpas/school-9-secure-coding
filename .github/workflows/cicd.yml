@@ -12,6 +12,7 @@ jobs:
     defaults:
       run:
         working-directory: tp
+    environment: DATABASE_TEST
     steps:
       - uses: actions/checkout@v3
       - name: Use Node.js 18.x
@@ -21,7 +22,9 @@ jobs:
           cache: 'npm'
           cache-dependency-path: 'tp/package-lock.json'
       - run: npm ci
-      - run: npm run ci-test
+      - name: Run Docker Compose to init Postgres containers
+        run: docker-compose up -d
+      - run: npm run test
   build:
     runs-on: ubuntu-latest
     defaults:
