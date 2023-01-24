@@ -1,7 +1,6 @@
-import * as chai from 'chai'
-import { server, assertsResponseSchemaPresenceHook } from '@lib/fastify'
+import { assertsResponseSchemaPresenceHook } from '@lib/fastify'
 import { expect } from 'chai'
-import fastify, { RouteOptions } from 'fastify'
+import fastify from 'fastify'
 describe('assertsResponseSchemaPresenceHook', () => {
     it('Should throw an error when schema is missing', () => {
         const testServer = fastify()
@@ -10,7 +9,9 @@ describe('assertsResponseSchemaPresenceHook', () => {
             testServer.route({
                 method: 'GET',
                 url: '/',
-                handler: () => {}
+                handler: () => {
+                    return
+                }
             })
         }).to.throw()
     })
