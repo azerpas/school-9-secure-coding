@@ -3,7 +3,7 @@ import { IsNotEmpty } from "class-validator"
 import { UniqueInColumn } from "decorators"
 import { Entity, PrimaryGeneratedColumn, Column, Unique } from "typeorm"
 import * as bcrypt from "bcrypt"
-import { validatePassword } from "@lib/password"
+import { PasswordDoesNotMatch, PasswordNotStrongEnough, validatePassword } from "@lib/password"
 
 @Entity()
 @Unique(["email"])
@@ -39,9 +39,9 @@ export class User {
 
     async setPassword(params: SetPasswordDTO) {
         const { password, passwordConfirmation } = params
-        if (password !== passwordConfirmation) throw new Error("Passwords do not match")
+        if (password !== passwordConfirmation) throw new PasswordDoesNotMatch("Passwords do not match")
         else {
-            if (!validatePassword(password).result) throw new Error("Password is not strong enough")
+            if (!validatePassword(password).result) throw new PasswordNotStrongEnough("Password is not strong enough")
             this.passwordHash = await bcrypt.hash(password, 10)
         }
     }
