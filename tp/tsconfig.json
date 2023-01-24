@@ -15,6 +15,7 @@
       "@entities/*": ["entities/*"],
       "@lib/*": ["lib/*"],
       "@schemas/*": ["schemas/*"],
+      "@routes/*": ["routes/*"],
     }
   },
   "ts-node": {
