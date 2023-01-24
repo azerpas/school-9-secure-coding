@@ -23,15 +23,12 @@ export const server = fastify(
         if (error instanceof MissingValidationSchemaError) {
             void reply.status(400).send({ error: error.message })
         }
+        if (process.env.NODE_ENV === 'production' && reply.statusCode >= 500) {
+            void reply.status(500).send({ error: 'Internal Server Error' })
+        } else {
+            void reply.status(500).send({ error: error.message })
+        }
     })
-
-server.listen({ port: 8080 }, (err, address) => {
-    if (err) {
-        console.error(err)
-        process.exit(1)
-    }
-    console.log(`Server listening at ${address}`)
-})
 
 // Code Legacy used for Exercise 4 reference
 export function assertsResponseSchemaPresenceHook(routeOptions: RouteOptions) {
