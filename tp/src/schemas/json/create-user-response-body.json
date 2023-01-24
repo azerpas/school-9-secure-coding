@@ -1,6 +1,5 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "$id": "create-user-response-body.json",
+    "$schema": "http://json-schema.org/schema",
     "type": "object",
     "title": "CreateUserResponseBody",
     "properties": {
