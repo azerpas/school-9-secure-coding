@@ -32,3 +32,16 @@ export const validatePassword = (password: string): {result: boolean, entropy: n
     }
 }
 
+export class PasswordNotStrongEnough extends Error {
+    constructor(message: string) {
+        super(message)
+        this.name = "PasswordNotStrongEnough"
+    }
+}
+
+export class PasswordDoesNotMatch extends Error {
+    constructor(message: string) {
+        super(message)
+        this.name = "PasswordDoesNotMatch"
+    }
+}
