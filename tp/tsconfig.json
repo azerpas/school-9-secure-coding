@@ -16,6 +16,7 @@
       "@lib/*": ["lib/*"],
       "@schemas/*": ["schemas/*"],
       "@routes/*": ["routes/*"],
+      "@hooks/*": ["hooks/*"],
     }
   },
   "ts-node": {
