@@ -1,13 +1,22 @@
 import fastify, { RouteOptions } from 'fastify'
 import cookie, { FastifyCookieOptions } from '@fastify/cookie'
 import { createSessionRequestBody, createUserRequestBody, createUserResponseBody } from '@schemas/json'
+import { userRoutes } from '@routes/users'
 
-export const server = fastify()
+export const server = fastify(
+    {
+        ajv: {
+            customOptions: {
+                removeAdditional: false
+            },
+        }
+    }
+)
     .addSchema(createSessionRequestBody)
-    .addSchema(createUserRequestBody)
-    .addSchema(createUserResponseBody)
+    //.addSchema(createUserResponseBody)
     // TODO: replace with a real secret dotenv variable
     .register(cookie, {secret: 'my-secret'} as FastifyCookieOptions)
+    .register(userRoutes, { prefix: '/users' })
     .decorateRequest('session', null)
     // .addHook('preHandler', loadSession)
 

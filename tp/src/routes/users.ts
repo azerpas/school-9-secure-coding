@@ -6,6 +6,9 @@ import { createUserRequestBody, createUserResponseBody, userShowParams, userShow
 
 // eslint-disable-next-line @typescript-eslint/require-await
 export async function userRoutes(fastify: FastifyInstance) {
+    fastify
+        .addSchema(createUserRequestBody)
+        .addSchema(createUserResponseBody)
     /*
     fastify.get<{ Params: UserShowParams }>('/:id', {
         schema: {
@@ -28,7 +31,7 @@ export async function userRoutes(fastify: FastifyInstance) {
             body: createUserRequestBody,
             response: { 201: createUserResponseBody }
         },
-        handler: async function create(request): Promise<CreateUserResponseBody> {
+        handler: async function create(request, reply) {
             const user = new User()
             user.firstName = request.body.firstname
             user.lastName = request.body.lastname
