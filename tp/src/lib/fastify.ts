@@ -1,4 +1,4 @@
-import fastify from 'fastify'
+import fastify, { RouteOptions } from 'fastify'
 import cookie, { FastifyCookieOptions } from '@fastify/cookie'
 import { createSessionRequestBody, createUserRequestBody, createUserResponseBody } from '@schemas/json'
 
@@ -22,3 +22,9 @@ server.listen({ port: 8080 }, (err, address) => {
     }
     console.log(`Server listening at ${address}`)
 })
+
+export function assertsResponseSchemaPresenceHook(routeOptions: RouteOptions) {
+    if (!routeOptions.schema) {
+        throw new Error('Missing schema for this route')
+    }
+}
