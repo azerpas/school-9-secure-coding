@@ -5,6 +5,7 @@ import { getAppDataSourceInitialized } from '@lib/typeorm'
 import { DataSource } from 'typeorm'
 import { expect } from 'chai'
 // import { ValidationError } from 'class-validator'
+import { faker } from '@faker-js/faker'
 
 
 chai.use(chaiAsPromised)
@@ -27,7 +28,7 @@ describe('User', function () {
             passwordHash: "", 
             firstName: "hello", 
             lastName: "world", 
-            id: 0, 
+            id: faker.datatype.uuid(), 
             emanpm: 0
         })
     }
