@@ -91,7 +91,6 @@ describe('Users (/users)', function () {
                 password: null,
                 passwordConfirmation: null,
             }
-            console.log(userBody)
             const response = await server.inject({
                 url: '/users',
                 method: 'POST',

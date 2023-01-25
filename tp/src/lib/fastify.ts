@@ -8,8 +8,6 @@ import {
     errorHandler
 } from '@hooks/index'
 
-
-
 export const server = fastify({
     logger: true,
     ajv: {

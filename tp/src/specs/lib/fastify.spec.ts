@@ -1,7 +1,6 @@
 import { server } from '@lib/fastify'
 import { expect } from 'chai'
 import { FastifyInstance } from 'fastify'
-
 describe('Fastify general errors', () => {
     it('should fetch the error if statusCode >= 500 and dev mode', async () => {
         server.route({
@@ -11,7 +10,6 @@ describe('Fastify general errors', () => {
                 throw new Error('MyCustomError')
             }
         })
-
         const response = await server.inject({
             url: '/error',
             method: 'GET',
