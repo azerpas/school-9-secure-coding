@@ -6,7 +6,9 @@ describe('Fastify general errors', () => {
         server.route({
             method: 'GET',
             url: '/error',
-            method: 'GET',
+            handler: () => {
+                throw new Error('MyCustomError')
+            }
         })
         const response = await server.inject({
             url: '/error',
