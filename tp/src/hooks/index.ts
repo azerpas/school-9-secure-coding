@@ -9,24 +9,10 @@ export class MissingValidationSchemaError extends Error {
     }
 }
 
-const sendMissingValidationSchemaError = (name: string, routeOptions: RouteOptions) => {
-    console.error(`Missing validation schema(s) for route ${routeOptions.url}: ${name}`)
-    throw new MissingValidationSchemaError(`A ${name} validation schema is required for the route ${routeOptions.url}`)
-}
-
 // Exercise 6
 export async function checkSchemaBodyQueryParamsHook(routeOptions: RouteOptions) {
-    const missingSchemas: string[] = []
     if (!routeOptions.schema)
-        sendMissingValidationSchemaError('', routeOptions)
-    if (!routeOptions.schema?.body)
-        missingSchemas.push('body')
-    if (!routeOptions.schema?.querystring)
-        missingSchemas.push('query')
-    if (!routeOptions.schema?.params)
-        missingSchemas.push('params')
-    if (missingSchemas.length > 0)
-        sendMissingValidationSchemaError(missingSchemas.join(', '), routeOptions)
+        throw new MissingValidationSchemaError(`A validation schema is required for the route ${routeOptions.url}`)
 }
 
 export const errorHandler = (
@@ -45,6 +31,8 @@ export const errorHandler = (
     }
     if (process.env.NODE_ENV === 'production' && reply.statusCode >= 500) {
         void reply.status(500).send({ error: 'Internal Server Error' })
+    } else if (reply.statusCode < 500) {
+        void reply.send(error)
     } else {
         void reply.status(500).send({ error: error.message })
     }
