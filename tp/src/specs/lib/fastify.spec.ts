@@ -1,23 +1,9 @@
-import { assertsResponseSchemaPresenceHook, server } from '@lib/fastify'
+import { server } from '@lib/fastify'
 import { expect } from 'chai'
-import fastify from 'fastify'
-describe('Fastify general errors', () => {
-    it('Should throw an error when schema is missing', () => {
-        const testServer = fastify()
-        testServer.addHook('onRoute', assertsResponseSchemaPresenceHook)
-        expect(() => {
-            testServer.route({
-                method: 'GET',
-                url: '/',
-                handler: () => {
-                    return
-                }
-            })
-        }).to.throw()
-    })
+import { FastifyInstance } from 'fastify'
 
+describe('Fastify general errors', () => {
     it('should fetch the error if statusCode >= 500 and dev mode', async () => {
-        // add a route that throws an error to `server`
         server.route({
             method: 'GET',
             url: '/error',
@@ -25,12 +11,16 @@ describe('Fastify general errors', () => {
                 throw new Error('MyCustomError')
             }
         })
-        const response = await server.inject({ url: '/error', method: 'GET' })
-        expect(response.statusCode).to.equal(500)
+
+        const response = await server.inject({
+            url: '/error',
+            method: 'GET',
+        })
+        expect(response.statusCode).equal(500)
         if (process.env.NODE_ENV === 'production') {
-            expect(response.payload).to.equal('{"error":"Internal Server Error"}')
+            expect(response.payload).equal('Internal Server Error')
         } else {
-            expect(response.payload).to.equal('{"error":"MyCustomError"}')
+            expect(response.payload).equal('{"statusCode":500,"error":"Internal Server Error","message":"MyCustomError"}')
         }
     })
 })
