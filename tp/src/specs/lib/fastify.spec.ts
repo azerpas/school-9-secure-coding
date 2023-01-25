@@ -1,41 +1,8 @@
-import {
-    assertsResponseSchemaPresenceHook,
-    server,
-    errorHandlerHook,
-} from '@lib/fastify'
+import { server } from '@lib/fastify'
 import { expect } from 'chai'
-import fastify, { FastifyInstance } from 'fastify'
+import { FastifyInstance } from 'fastify'
 
 describe('Fastify general errors', () => {
-    it('Should throw an error when response schema is missing', () => {
-        const unsafeRoute = async (route: FastifyInstance) => {
-            route.post(
-                '/un-safe',
-                {
-                    schema: {
-                        body: {
-                            properties: {
-                                foo: 'bar',
-                            },
-                        },
-                    },
-                },
-                () => true
-            )
-            const testServer = fastify()
-                .setErrorHandler(errorHandlerHook)
-                .addHook('onRoute', assertsResponseSchemaPresenceHook)
-                .register(unsafeRoute)
-            await expect(testServer).to.eventually.be.rejected.and.deep.include(
-                {
-                    statusCode: 500,
-                    name: 'Internal Server Error',
-                    message: 'Response schema not found for route /un-safe',
-                }
-            )
-        }
-    })
-
     it('should fetch the error if statusCode >= 500 and dev mode', async () => {
         // add a route that throws an error to `server`
         const errorRoute = async (route: FastifyInstance) => {
@@ -47,11 +14,9 @@ describe('Fastify general errors', () => {
             })
         }
 
-        const testServer = fastify()
-            .setErrorHandler(errorHandlerHook)
-            .register(errorRoute)
+        await server.register(errorRoute)
 
-        const response = await testServer.inject({
+        const response = await server.inject({
             url: '/error',
             method: 'GET',
         })

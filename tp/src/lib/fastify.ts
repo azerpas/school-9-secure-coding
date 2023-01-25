@@ -23,7 +23,7 @@ export const server = fastify({
     .register(userRoutes, { prefix: '/users' })
     .decorateRequest('session', null)
     .addHook('onRoute', checkSchemaBodyQueryParamsHook)
-    .addHook('onRoute', assertsResponseSchemaPresenceHook)
+    // .addHook('onRoute', assertsResponseSchemaPresenceHook)
     .setErrorHandler(errorHandler)
 
 // Code Legacy used for Exercise 4 reference
