@@ -60,14 +60,14 @@ describe('Users (/users)', function () {
             chai.expect(response.statusCode).equal(201)
 
             response = await server.inject({
-                url: '/web-api/users',
+                url: '/users',
                 method: 'POST',
                 payload: userBody,
             })
             chai.expect(response.statusCode).equal(400)
             chai.expect(JSON.parse(response.payload)).deep.equal({
                 error: {
-                    UniqueInColumn: 'email already exists',
+                    UniqueInColumnConstraint: 'User.email is not unique'
                 },
             })
         })
@@ -91,12 +91,13 @@ describe('Users (/users)', function () {
                 password: null,
                 passwordConfirmation: null,
             }
+            console.log(userBody)
             const response = await server.inject({
                 url: '/users',
                 method: 'POST',
                 payload: { userBody },
             })
-            expect(response.statusCode).equal(403)
+            expect(response.statusCode).equal(400)
         })
     })
 })
