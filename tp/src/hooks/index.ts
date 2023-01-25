@@ -1,4 +1,6 @@
-import { RouteOptions } from "fastify"
+import { ValidationError } from "class-validator"
+import { FastifyError, FastifyReply, FastifyRequest, RouteOptions } from "fastify"
+import { EntityNotFoundError } from "typeorm"
 
 export class MissingValidationSchemaError extends Error {
     constructor(message: string) {
@@ -25,4 +27,25 @@ export async function checkSchemaBodyQueryParamsHook(routeOptions: RouteOptions)
         missingSchemas.push('params')
     if (missingSchemas.length > 0)
         sendMissingValidationSchemaError(missingSchemas.join(', '), routeOptions)
+}
+
+export const errorHandler = (
+    error: FastifyError,
+    req: FastifyRequest,
+    reply: FastifyReply
+) => {
+    if (error instanceof MissingValidationSchemaError) {
+        void reply.status(400).send({ error: error.message })
+    }
+    if (error instanceof ValidationError) {
+        void reply.status(400).send({ error: error.constraints })
+    }
+    if (error instanceof EntityNotFoundError) {
+        void reply.status(404).send({ error: error.message })
+    }
+    if (process.env.NODE_ENV === 'production' && reply.statusCode >= 500) {
+        void reply.status(500).send({ error: 'Internal Server Error' })
+    } else {
+        void reply.status(500).send({ error: error.message })
+    }
 }
