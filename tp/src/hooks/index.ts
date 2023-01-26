@@ -1,3 +1,4 @@
+import { IncorrectPassword, UserNotFound } from "@entities/user"
 import { ValidationError } from "class-validator"
 import { FastifyError, FastifyReply, FastifyRequest, RouteOptions } from "fastify"
 import { EntityNotFoundError } from "typeorm"
@@ -26,7 +27,10 @@ export const errorHandler = (
     if (error instanceof ValidationError) {
         void reply.status(400).send({ error: error.constraints })
     }
-    if (error instanceof EntityNotFoundError) {
+    if (error instanceof IncorrectPassword) {
+        void reply.status(403).send({ error: error.message })
+    }
+    if (error instanceof EntityNotFoundError || error instanceof UserNotFound) {
         void reply.status(404).send({ error: error.message })
     }
     if (process.env.NODE_ENV === 'production' && reply.statusCode >= 500) {
