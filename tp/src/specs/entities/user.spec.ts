@@ -18,7 +18,7 @@ describe('User', function () {
     })
 
     beforeEach(async function () {
-        await datasource.getRepository(User).clear()
+        await datasource.getRepository(User).delete({})
     })
 
     const generateUser = (email?: string): User => {

@@ -17,7 +17,7 @@ describe('Users (/users)', function () {
         })
 
         beforeEach(async function () {
-            await datasource.getRepository(User).clear()
+            await datasource.getRepository(User).delete({})
         })
 
         it('should register the user', async function () {

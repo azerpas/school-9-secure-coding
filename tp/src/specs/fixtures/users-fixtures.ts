@@ -12,6 +12,7 @@ export function buildUserFixture(opts: UserFixtureOptions = {}) {
 
     // that hash matches password 'changethat', hardcoded so we save CPU hasing time
     user.passwordHash = '$2a$12$dm2t30Y07Mt9TklkLOuy.efFIJ69WTW3f7NmwH8uioX9R6NHMQSXO'
+    user.sessions = []
 
     return user
 }
