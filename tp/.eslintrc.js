@@ -28,7 +28,7 @@ module.exports = {
     '@typescript-eslint/require-await': 'off',
 
     // Feel free to enable/disable some rules depending on your needs.
-    'indent': [ 'error', 4 ],
+    'indent': [ 'error', 4, { "ignoredNodes": ["PropertyDefinition"]} ],
     'semi': [ 'error', 'never' ],
   }
 }
