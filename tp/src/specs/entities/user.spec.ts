@@ -27,8 +27,7 @@ describe('User', function () {
             passwordHash: "", 
             firstName: "hello", 
             lastName: "world", 
-            id: faker.datatype.uuid(), 
-            emanpm: 0
+            id: faker.datatype.uuid()
         })
     }
 

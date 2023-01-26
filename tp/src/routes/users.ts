@@ -17,7 +17,6 @@ export async function userRoutes(fastify: FastifyInstance) {
             user.firstName = request.body.firstname
             user.lastName = request.body.lastname
             user.email = request.body.email
-            user.emanpm = 0
             try {
                 await user.setPassword({ password: request.body.password, passwordConfirmation: request.body.passwordConfirmation })
             } catch (error) {
