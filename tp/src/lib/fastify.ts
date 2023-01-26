@@ -8,6 +8,8 @@ import {
     errorHandler
 } from '@hooks/index'
 
+if (!process.env.COOKIE_SECRET) throw new Error('Missing COOKIE_SECRET env variable')
+
 export const server = fastify({
     logger: true,
     ajv: {
@@ -17,7 +19,7 @@ export const server = fastify({
         },
     },
 }) // TODO: replace with a real secret dotenv variable
-    .register(cookie, { secret: 'my-secret' } as FastifyCookieOptions)
+    .register(cookie, { secret: process.env.COOKIE_SECRET } as FastifyCookieOptions)
     .register(userRoutes, { prefix: '/users' })
     .decorateRequest('session', null)
     .addHook('onRoute', checkSchemaBodyQueryParamsHook)
