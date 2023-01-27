@@ -1,5 +1,5 @@
 import { DataSource } from "typeorm"
-import { User } from "@entities/index"
+import { Session, User } from "@entities/index"
 import 'dotenv/config'
 import { UserSubscriber } from "subscribers"
 
@@ -25,7 +25,7 @@ export const getAppDataSource = (): DataSource => {
                 username: process.env.POSTGRES_USER,
                 password: process.env.POSTGRES_PASSWORD,
                 database: process.env.POSTGRES_DB,
-                entities: [User],
+                entities: [User, Session],
                 subscribers: [UserSubscriber],
                 synchronize: true,
                 logging: false

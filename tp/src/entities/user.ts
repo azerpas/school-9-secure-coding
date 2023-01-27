@@ -1,9 +1,10 @@
 /* eslint-disable indent */
 import { IsNotEmpty } from "class-validator"
 import { UniqueInColumn } from "decorators"
-import { Entity, PrimaryGeneratedColumn, Column, Unique } from "typeorm"
+import { Entity, PrimaryGeneratedColumn, Column, Unique, OneToMany } from "typeorm"
 import * as bcrypt from "bcrypt"
 import { PasswordDoesNotMatch, PasswordNotStrongEnough, validatePassword } from "@lib/password"
+import { Session } from "./session"
 
 @Entity()
 @Unique(["email"])
@@ -16,9 +17,6 @@ export class User {
 
 	@Column({ length: 64 })
 	lastName!: string
-
-	@Column()
-	emanpm!: number
 
     @Column({
         transformer: {
@@ -36,6 +34,9 @@ export class User {
 
 	@Column({ length: 60 })
 	passwordHash!: string
+
+    @OneToMany(() => Session, (session) => session.user, {nullable: true})
+    sessions?: Session[]
 
     async setPassword(params: SetPasswordDTO) {
         const { password, passwordConfirmation } = params
