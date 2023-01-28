@@ -63,9 +63,6 @@ export class User {
     async isPasswordValid(password: string) {
         return bcrypt.compare(password, this.passwordHash)
     }
-    async isPasswordMatch(password: string, passwordConfirmation: string) {
-        return password === passwordConfirmation
-    }
 }
 
 export interface SetPasswordDTO {

@@ -23,27 +23,12 @@ export async function sessionRoutes(fastify: FastifyInstance) {
                 .findOneBy({ email: request.body.email })
             if (!user) throw new UserNotFound('User could not be found')
 
-            const regexEmail = (email: string) => {
-                const re = /\S+@\S+\.\S+/
-                return re.test(email)
-            }
-            if (!regexEmail(request.body.email))
-                throw new EmailNotFound('Email not found')
-
             const isValidPassword = await user.isPasswordValid(
                 request.body.password
             )
 
-            const isPasswordMatch = await user.isPasswordMatch(
-                request.body.password,
-                user.passwordHash
-            )
-
             if (!isValidPassword)
                 throw new IncorrectPassword('Password is incorrect')
-
-            if (!isPasswordMatch)
-                throw new PasswordDoesNotMatch('Password does not match')
 
             const session = datasource.getRepository(Session).create()
             session.user = user
