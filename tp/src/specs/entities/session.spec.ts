@@ -67,26 +67,33 @@ describe('Session', function () {
             const newSession = datasource.getRepository(Session).create()
             user.email = ''
             newSession.user = user
-            const response = server.inject({
-                url: '/',
+            console.log(newSession.user)
+            const response = await server.inject({
+                url: '/sessions',
                 method: 'POST',
-                payload: newSession.user,
+                payload: {
+                    email: newSession.user.email,
+                    password: newSession.user.passwordHash,
+                },
             })
-            expect((await response).statusCode).to.equal(404)
+            expect(response.statusCode).to.equal(404)
         })
+
         it('should reject with 403 if password does not match', async () => {
             const newSession = datasource.getRepository(Session).create()
             newSession.user = user
-            void datasource.getRepository(User).save(newSession.user)
 
             newSession.user.passwordHash = faker.internet.password(20)
-            console.log(newSession.user)
-            const response = server.inject({
-                url: '/',
+            const response = await server.inject({
+                url: '/sessions',
                 method: 'POST',
-                payload: newSession.user,
+                payload: {
+                    email: newSession.user.email,
+                    password: 'password',
+                },
             })
-            expect((await response).statusCode).to.equal(403)
+
+            expect(response.statusCode).to.equal(403)
         })
     })
 })
