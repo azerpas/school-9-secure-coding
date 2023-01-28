@@ -1,17 +1,24 @@
-import { BeforeInsert, Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm"
-import { User } from "./"
-import * as crypto from "crypto"
-import { IsNotEmpty } from "class-validator"
+import {
+    BeforeInsert,
+    Column,
+    CreateDateColumn,
+    Entity,
+    ManyToOne,
+    PrimaryGeneratedColumn,
+} from 'typeorm'
+import { User } from './'
+import * as crypto from 'crypto'
+import { IsNotEmpty } from 'class-validator'
 
 @Entity()
 export class Session {
-    @PrimaryGeneratedColumn("uuid")
+    @PrimaryGeneratedColumn('uuid')
     id!: string
 
     @Column({ length: 384 })
     token!: string
 
-    @ManyToOne(() => User, (user) => user.sessions, {nullable: false})
+    @ManyToOne(() => User, (user) => user.sessions, { nullable: false })
     @IsNotEmpty({ message: "Session canno't be created without a user id" })
     user!: User
 
@@ -21,7 +28,7 @@ export class Session {
     @Column()
     expiresAt!: Date
 
-    @Column({nullable: true})
+    @Column({ nullable: true })
     revokedAt?: Date
 
     @BeforeInsert()
@@ -36,6 +43,6 @@ export class Session {
 
     setExpiresAt() {
         this.expiresAt = new Date()
-        this.expiresAt.setDate(this.expiresAt.getDate() + 1)
+        this.expiresAt.setDate(this.expiresAt.getDay() + 1)
     }
 }

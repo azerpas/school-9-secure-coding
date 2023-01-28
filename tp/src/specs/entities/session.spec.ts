@@ -6,6 +6,8 @@ import { DataSource, QueryFailedError } from 'typeorm'
 import { expect } from 'chai'
 import { buildUserFixture } from 'specs/fixtures/users-fixtures'
 import { deleteAllTables } from '.'
+import { server } from '@lib/fastify'
+import { faker } from '@faker-js/faker'
 
 chai.use(chaiAsPromised)
 
@@ -31,18 +33,60 @@ describe('Session', function () {
         it('should create a new Session in database', async () => {
             const newSession = datasource.getRepository(Session).create()
             newSession.user = user
-            const session = await datasource.getRepository(Session).save(newSession)
+            const session = await datasource
+                .getRepository(Session)
+                .save(newSession)
             expect(session.createdAt.getDay()).to.equal(new Date().getDay())
-            expect(session.expiresAt.getDay()).to.equal(new Date().getDay() + 1)
+            expect(session.expiresAt.getDate()).to.equal(
+                new Date().getDay() + 1
+            )
             expect(session.token.length).to.equal(64)
             expect(session.user.firstName).to.equal(user.firstName)
         })
 
         it('should raise error if missing user in session', async () => {
             const newSession = datasource.getRepository(Session).create()
-            await expect(datasource.getRepository(Session).save(newSession)).to.be.rejectedWith(QueryFailedError, 'null value in column "userId" of relation "session" violates not-null constraint')
+            await expect(
+                datasource.getRepository(Session).save(newSession)
+            ).to.be.rejectedWith(
+                QueryFailedError,
+                'null value in column "userId" of relation "session" violates not-null constraint'
+            )
+        })
+
+        it('should create a session after lowering email', async () => {
+            const newSession = datasource.getRepository(Session).create()
+            newSession.user = user
+            const session = await datasource
+                .getRepository(Session)
+                .save(newSession)
+            expect(session.user.email).to.equal(user.email.toLowerCase())
+        })
+
+        it('should reject with 404 if email not found', async () => {
+            const newSession = datasource.getRepository(Session).create()
+            user.email = ''
+            newSession.user = user
+            const response = server.inject({
+                url: '/',
+                method: 'POST',
+                payload: newSession.user,
+            })
+            expect((await response).statusCode).to.equal(404)
+        })
+        it('should reject with 403 if password does not match', async () => {
+            const newSession = datasource.getRepository(Session).create()
+            newSession.user = user
+            void datasource.getRepository(User).save(newSession.user)
+
+            newSession.user.passwordHash = faker.internet.password(20)
+            console.log(newSession.user)
+            const response = server.inject({
+                url: '/',
+                method: 'POST',
+                payload: newSession.user,
+            })
+            expect((await response).statusCode).to.equal(403)
         })
     })
-
-
 })
