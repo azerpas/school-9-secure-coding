@@ -1,16 +1,16 @@
 // tp2 Exercice 2 test case
 import { server } from '@lib/fastify'
-import { User } from '@entities/user'
 import { expect } from 'chai'
 import { CreateUserRequestBody, CreateUserResponseBody } from '@schemas/types'
 import { faker } from '@faker-js/faker'
 import { getAppDataSourceInitialized } from '@lib/typeorm'
 import { DataSource } from 'typeorm'
 import * as chai from 'chai'
-import { loadSession, saveSession } from '@lib/session'
 import { deleteAllTables } from 'specs/entities'
 import { buildUserFixture, createUserFixture } from '../fixtures/users-fixtures'
 import { createSessionFixture, loginAs } from '../fixtures/sessions-fixtures'
+import { sign } from '@fastify/cookie'
+import { Session, User } from '@entities/index'
 
 describe('Users (/users)', function () {
     let datasource: DataSource
@@ -122,11 +122,17 @@ describe('Users (/users)', function () {
     })
 
     describe('User session context cookie', function () {
-        it('should respond with the current user identity', async () => {
-            const mockUser = await createUserFixture({})
+        const createUserAndSessionFixture = async () => {
+            const mockUser = await createUserFixture()
             const session = await createSessionFixture({
                 user: mockUser,
+
             })
+            return { mockUser, session }
+        }
+
+        it('should respond with the current user identity', async () => {
+            const { mockUser, session } = await createUserAndSessionFixture()
             const response = await server.inject({
                 url: '/users/me',
                 method: 'GET',
@@ -138,10 +144,61 @@ describe('Users (/users)', function () {
             expect(user.id).to.equal(mockUser.id)
             expect(response.json()).to.not.haveOwnProperty('token')
         })
-        it('should respond with 401 if user is not logged in')
-        it('should respond with 401 if unsigned cookie')
-        it('should respond with 401 if cookie signature with a wrong key')
-        it('should respond with 401 if session has expired')
-        it('should respond with 401 if session has been revoked')
+
+        it('should respond with 401 if user is not logged in', async () => {
+            const response = await server.inject({
+                url: '/users/me',
+                method: 'GET',
+            })
+            expect(response.statusCode).to.equal(401)
+        })
+
+        it('should respond with 401 if unsigned cookie', async () => {
+            const { session } = await createUserAndSessionFixture()
+            const response = await server.inject({
+                url: '/users/me',
+                method: 'GET',
+                cookies: {
+                    session: session.token,
+                },
+            })
+            expect(response.statusCode).to.equal(401)
+        })
+
+        it('should respond with 401 if cookie signature with a wrong key', async () => {
+            const { session } = await createUserAndSessionFixture()
+            const response = await server.inject({
+                url: '/users/me',
+                method: 'GET',
+                cookies: {
+                    session: sign(session.token, 'wrong-key'),
+                },
+            })
+            expect(response.statusCode).to.equal(401)
+        })
+
+        it('should respond with 401 if session has expired', async () => {
+            const { session } = await createUserAndSessionFixture()
+            // Mock expired session
+            const expiredSession = await datasource.getRepository(Session).save({...session, expiresAt: new Date(Date.now() - 10000)})
+            const response = await server.inject({
+                url: '/users/me',
+                method: 'GET',
+                cookies: loginAs(expiredSession),
+            })
+            expect(response.statusCode).to.equal(401)
+        })
+
+        it('should respond with 401 if session has been revoked', async () => {
+            const { session } = await createUserAndSessionFixture()
+            // Mock revoked session
+            const revokedSession = await datasource.getRepository(Session).save({...session, revokedAt: new Date()})
+            const response = await server.inject({
+                url: '/users/me',
+                method: 'GET',
+                cookies: loginAs(revokedSession),
+            })
+            expect(response.statusCode).to.equal(401)
+        })
     })
 })

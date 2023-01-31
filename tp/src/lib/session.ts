@@ -25,6 +25,20 @@ export class SessionNotFoundError extends Error {
     }
 }
 
+export class SessionExpiredError extends Error {
+    constructor(message: string) {
+        super(message)
+        this.name = 'SessionExpiredError'
+    }
+}
+
+export class SessionRevokedError extends Error {
+    constructor(message: string) {
+        super(message)
+        this.name = 'SessionRevokedError'
+    }
+}
+
 export async function saveSession(reply: FastifyReply, user: User) {
     const datasource = await getAppDataSourceInitialized()
 
@@ -62,9 +76,8 @@ export async function loadSession(request: FastifyRequest) {
         .getRepository(Session)
         .findOne({ where: { token }, relations: { user: true } })
     if (!session) throw new SessionNotFoundError('Session could not be found')
+    if (session.expiresAt < new Date()) throw new SessionExpiredError('Session expired')
+    if (session.revokedAt) throw new SessionRevokedError('Session revoked')
     request.session = session
     request.user = session.user
-    console.log('Session loaded')
-    console.log(request.session)
-    console.log(request.user)
 }
