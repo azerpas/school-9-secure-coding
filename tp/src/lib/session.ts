@@ -33,29 +33,38 @@ export async function saveSession(reply: FastifyReply, user: User) {
 
     await datasource.getRepository(Session).save(session)
 
-    return reply.setCookie('session', session.token, {
-        path: '/',
-        signed: true,
-        domain: 'localhost',
-        httpOnly: true,
-    })
+    await reply
+        .setCookie('session', session.token, {
+            path: '/',
+            signed: true,
+            domain: 'localhost',
+            httpOnly: true,
+        })
+        .status(201)
+        .send('')
 }
 
 /**
- * The loadSession function is a preHandler hook that can be registered globally on a fastify instance. 
- * If you set it up as a global hook, it should do nothing if the session cookie is missing in request. 
- * Else, it will decorate the request object with additional user and session properties. 
+ * The loadSession function is a preHandler hook that can be registered globally on a fastify instance.
+ * If you set it up as a global hook, it should do nothing if the session cookie is missing in request.
+ * Else, it will decorate the request object with additional user and session properties.
  * For performances reasons, use decorateRequest.
  */
 export async function loadSession(request: FastifyRequest) {
     const cookie = request.cookies['session']
     if (!cookie) return
     const result = request.unsignCookie(cookie)
-    if (!result.valid || !result.value) throw new InvalidSessionError('Invalid token')
+    if (!result.valid || !result.value)
+        throw new InvalidSessionError('Invalid token')
     const token = result.value
     const datasource = await getAppDataSourceInitialized()
-    const session = await datasource.getRepository(Session).findOneBy({ token })
+    const session = await datasource
+        .getRepository(Session)
+        .findOne({ where: { token }, relations: { user: true } })
     if (!session) throw new SessionNotFoundError('Session could not be found')
     request.session = session
     request.user = session.user
+    console.log('Session loaded')
+    console.log(request.session)
+    console.log(request.user)
 }
