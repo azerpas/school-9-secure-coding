@@ -54,4 +54,25 @@ export async function userRoutes(fastify: FastifyInstance) {
             })
         },
     })
+
+    fastify.get<{ Params: UserShowParams }>('/me', {
+        schema: {
+            response: { 200: userShowResponse },
+        },
+        handler: async function show(request, reply) {
+            if (!request.user) 
+                return reply.status(401).send({ error: 'Unauthorized' })
+            const user = await (await getAppDataSourceInitialized())
+                .getRepository(User)
+                .findOneBy({ id: request.user.id })
+            if (!user)
+                return reply.status(404).send({ error: 'User not found' })
+            return reply.status(200).send({
+                ...user,
+                firstname: user.firstName,
+                lastname: user.lastName,
+                id: user.id,
+            })
+        }
+    })
 }
