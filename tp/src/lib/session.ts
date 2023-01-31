@@ -11,6 +11,13 @@ declare module 'fastify' {
     }
 }
 
+export class InvalidSessionError extends Error {
+    constructor(message: string) {
+        super(message)
+        this.name = 'InvalidSessionError'
+    }
+}
+
 
 export async function saveSession(reply: FastifyReply, user: User) {
     const datasource = await getAppDataSourceInitialized()
@@ -35,7 +42,14 @@ export async function saveSession(reply: FastifyReply, user: User) {
  * For performances reasons, use decorateRequest.
  */
 export async function loadSession(request: FastifyRequest) {
-    // TODO: read the cookie from request.cookies[COOKIE_NAME].
-    // TODO: unsign the cookie (or reject if invalid) and retreive the token.
-    // TODO: load the sesion + user and assign it to ̀request.session` and `request.user`.
+    const cookie = request.cookies['session']
+    if (!cookie) throw new InvalidSessionError('Missing token')
+    const result = request.unsignCookie(cookie)
+    if (!result.valid || !result.value) throw new InvalidSessionError('Invalid token')
+    const token = result.value
+    const datasource = await getAppDataSourceInitialized()
+    const session = await datasource.getRepository(Session).findOneBy({ token })
+    if (!session) throw new InvalidSessionError('Session could not be found')
+    request.session = session
+    request.user = session.user
 }
