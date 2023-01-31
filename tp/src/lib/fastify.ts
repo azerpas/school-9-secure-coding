@@ -3,6 +3,7 @@ import cookie, { FastifyCookieOptions } from '@fastify/cookie'
 import { userRoutes } from '@routes/users'
 import { checkSchemaBodyQueryParamsHook, errorHandler } from '@hooks/index'
 import { sessionRoutes } from '@routes/sessions'
+import { loadSession } from './session'
 
 if (!process.env.COOKIE_SECRET)
     throw new Error('Missing COOKIE_SECRET env variable')
@@ -23,6 +24,7 @@ export const server = fastify({
     .register(sessionRoutes, { prefix: '/sessions' })
     .decorateRequest('session', null)
     .addHook('onRoute', checkSchemaBodyQueryParamsHook)
+    .addHook('preHandler', loadSession)
     // .addHook('onRoute', assertsResponseSchemaPresenceHook)
     .setErrorHandler(errorHandler)
 

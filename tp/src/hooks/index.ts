@@ -1,5 +1,6 @@
 import { EmailNotFound, IncorrectPassword, UserNotFound } from '@entities/user'
 import { PasswordDoesNotMatch } from '@lib/password'
+import { InvalidSessionError, SessionExpiredError, SessionNotFoundError, SessionRevokedError } from '@lib/session'
 import { ValidationError } from 'class-validator'
 import {
     FastifyError,
@@ -38,6 +39,14 @@ export const errorHandler = (
         void reply.status(400).send({ error: error.constraints })
     }
     if (
+        error instanceof SessionNotFoundError ||
+        error instanceof InvalidSessionError ||
+        error instanceof SessionExpiredError ||
+        error instanceof SessionRevokedError
+    ) {
+        void reply.status(401).send({ error: error.message })
+    }
+    if (
         error instanceof IncorrectPassword ||
         error instanceof PasswordDoesNotMatch
     ) {
@@ -53,6 +62,7 @@ export const errorHandler = (
     if (process.env.NODE_ENV === 'production' && reply.statusCode >= 500) {
         void reply.status(500).send({ error: 'Internal Server Error' })
     } else if (reply.statusCode < 500) {
+        console.log(error)
         void reply.send(error)
     } else {
         void reply.status(500).send({ error: error.message })

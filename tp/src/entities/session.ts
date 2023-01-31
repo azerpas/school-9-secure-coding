@@ -5,17 +5,21 @@ import {
     Entity,
     ManyToOne,
     PrimaryGeneratedColumn,
+    Unique,
 } from 'typeorm'
 import { User } from './'
 import * as crypto from 'crypto'
 import { IsNotEmpty } from 'class-validator'
+import { UniqueInColumn } from 'decorators'
 
 @Entity()
+@Unique(['token'])
 export class Session {
     @PrimaryGeneratedColumn('uuid')
     id!: string
 
     @Column({ length: 384 })
+    @UniqueInColumn({ message: 'Session.token is not unique' })
     token!: string
 
     @ManyToOne(() => User, (user) => user.sessions, { nullable: false })
@@ -43,6 +47,6 @@ export class Session {
 
     setExpiresAt() {
         this.expiresAt = new Date()
-        this.expiresAt.setDate(this.expiresAt.getDay() + 1)
+        this.expiresAt.setDate(this.expiresAt.getDate() + 1)
     }
 }
