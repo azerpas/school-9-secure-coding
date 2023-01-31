@@ -67,7 +67,6 @@ describe('Session', function () {
             const newSession = datasource.getRepository(Session).create()
             user.email = ''
             newSession.user = user
-            console.log(newSession.user)
             const response = await server.inject({
                 url: '/sessions',
                 method: 'POST',

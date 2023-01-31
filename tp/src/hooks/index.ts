@@ -38,7 +38,10 @@ export const errorHandler = (
     if (error instanceof ValidationError) {
         void reply.status(400).send({ error: error.constraints })
     }
-    if (error instanceof SessionNotFoundError || error instanceof InvalidSessionError) {
+    if (
+        error instanceof SessionNotFoundError ||
+        error instanceof InvalidSessionError
+    ) {
         void reply.status(401).send({ error: error.message })
     }
     if (
@@ -57,6 +60,7 @@ export const errorHandler = (
     if (process.env.NODE_ENV === 'production' && reply.statusCode >= 500) {
         void reply.status(500).send({ error: 'Internal Server Error' })
     } else if (reply.statusCode < 500) {
+        console.log(error)
         void reply.send(error)
     } else {
         void reply.status(500).send({ error: error.message })

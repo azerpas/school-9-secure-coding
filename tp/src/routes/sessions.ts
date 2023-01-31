@@ -19,16 +19,16 @@ export async function sessionRoutes(fastify: FastifyInstance) {
             const datasource = await getAppDataSourceInitialized()
             const user = await datasource
                 .getRepository(User)
-                .findOneBy({ email: request.body.email  })
+                .findOneBy({ email: request.body.email })
             if (!user) throw new UserNotFound('User could not be found')
 
             const isValidPassword = await user.isPasswordValid(
-                request.body.password 
+                request.body.password
             )
             if (!isValidPassword)
                 throw new IncorrectPassword('Password is incorrect')
 
-            return saveSession(reply, user)
+            void saveSession(reply, user)
         },
     })
 
