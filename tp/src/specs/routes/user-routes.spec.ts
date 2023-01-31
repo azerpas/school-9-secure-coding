@@ -189,6 +189,16 @@ describe('Users (/users)', function () {
             expect(response.statusCode).to.equal(401)
         })
 
-        it('should respond with 401 if session has been revoked')
+        it('should respond with 401 if session has been revoked', async () => {
+            const { session } = await createUserAndSessionFixture()
+            // Mock revoked session
+            const revokedSession = await datasource.getRepository(Session).save({...session, revokedAt: new Date()})
+            const response = await server.inject({
+                url: '/users/me',
+                method: 'GET',
+                cookies: loginAs(revokedSession),
+            })
+            expect(response.statusCode).to.equal(401)
+        })
     })
 })
