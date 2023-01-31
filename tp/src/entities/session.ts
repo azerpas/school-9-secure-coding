@@ -47,6 +47,6 @@ export class Session {
 
     setExpiresAt() {
         this.expiresAt = new Date()
-        this.expiresAt.setDate(this.expiresAt.getDay() + 1)
+        this.expiresAt.setDate(this.expiresAt.getDate() + 1)
     }
 }

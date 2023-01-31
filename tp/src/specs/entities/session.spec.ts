@@ -37,8 +37,10 @@ describe('Session', function () {
                 .getRepository(Session)
                 .save(newSession)
             expect(session.createdAt.getDay()).to.equal(new Date().getDay())
+            const d = new Date()
+            d.setDate(d.getDate() + 1)
             expect(session.expiresAt.getDate()).to.equal(
-                new Date().getDay() + 1
+                d.getDate()
             )
             expect(session.token.length).to.equal(64)
             expect(session.user.firstName).to.equal(user.firstName)
