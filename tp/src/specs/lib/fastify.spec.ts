@@ -1,15 +1,28 @@
-import { server } from '@lib/fastify'
+import { checkSchemaBodyQueryParamsHook } from '@hooks/index'
 import { expect } from 'chai'
+import fastify, { FastifyInstance } from 'fastify'
 describe('Fastify general errors', () => {
-    it('should fetch the error if statusCode >= 500 and dev mode', async () => {
-        server.route({
+    let serverTestInstance: FastifyInstance
+
+    beforeEach(async () => {
+        serverTestInstance = fastify()
+        serverTestInstance.route({
             method: 'GET',
             url: '/error',
             handler: () => {
                 throw new Error('MyCustomError')
             },
         })
-        const response = await server.inject({
+        serverTestInstance.addHook('onRoute', checkSchemaBodyQueryParamsHook)
+        await serverTestInstance.listen({ port: 3005 })
+    })
+
+    afterEach(async () => {
+        await serverTestInstance.close()
+    })
+
+    it('should fetch the error if statusCode >= 500 and dev mode', async () => {
+        const response = await serverTestInstance.inject({
             url: '/error',
             method: 'GET',
         })
