@@ -1,7 +1,6 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
-import { request } from 'http'
 import { Session } from '../entities/session'
-import { IncorrectPassword, User } from '../entities/user'
+import { User } from '../entities/user'
 import { getAppDataSourceInitialized } from './typeorm'
 
 declare module 'fastify' {
@@ -76,7 +75,8 @@ export async function loadSession(request: FastifyRequest) {
         .getRepository(Session)
         .findOne({ where: { token }, relations: { user: true } })
     if (!session) throw new SessionNotFoundError('Session could not be found')
-    if (session.expiresAt < new Date()) throw new SessionExpiredError('Session expired')
+    if (session.expiresAt < new Date())
+        throw new SessionExpiredError('Session expired')
     if (session.revokedAt) throw new SessionRevokedError('Session revoked')
     request.session = session
     request.user = session.user

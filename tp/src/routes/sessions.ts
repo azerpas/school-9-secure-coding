@@ -1,5 +1,5 @@
-import { IncorrectPassword, User, UserNotFound } from '@entities/index'
-import { saveSession } from '@lib/session'
+import { IncorrectPassword, Session, User, UserNotFound } from '@entities/index'
+import { SessionNotFoundError, saveSession } from '@lib/session'
 import { getAppDataSourceInitialized } from '@lib/typeorm'
 import { createSessionRequestBody } from '@schemas/json'
 import { CreateSessionRequestBody } from '@schemas/types'
@@ -24,6 +24,18 @@ export async function sessionRoutes(fastify: FastifyInstance) {
                 throw new IncorrectPassword('Password is incorrect')
 
             void saveSession(reply, user)
+        },
+    })
+
+    fastify.delete('/current', {
+        handler: async function destroy(request, reply) {
+            const datasource = await getAppDataSourceInitialized()
+            const session = request.session
+            if (!session) throw new SessionNotFoundError('Session not found')
+            session.revokedAt = new Date()
+            await datasource.getRepository(Session).save(session)
+            request.session = undefined
+            return reply.clearCookie('session').status(204).send()
         },
     })
 }

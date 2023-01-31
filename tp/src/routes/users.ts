@@ -1,16 +1,10 @@
 import { User } from '@entities/user'
 import { FastifyInstance } from 'fastify'
 import { getAppDataSourceInitialized } from '@lib/typeorm'
-import {
-    CreateUserRequestBody,
-    CreateUserResponseBody,
-    UserShowParams,
-    UserShowResponse,
-} from '@schemas/types'
+import { CreateUserRequestBody, UserShowParams } from '@schemas/types'
 import {
     createUserRequestBody,
     createUserResponseBody,
-    userShowParams,
     userShowResponse,
 } from '@schemas/json'
 import { PasswordDoesNotMatch, PasswordNotStrongEnough } from '@lib/password'
@@ -60,7 +54,7 @@ export async function userRoutes(fastify: FastifyInstance) {
             response: { 200: userShowResponse },
         },
         handler: async function show(request, reply) {
-            if (!request.user) 
+            if (!request.user)
                 return reply.status(401).send({ error: 'Unauthorized' })
             const user = await (await getAppDataSourceInitialized())
                 .getRepository(User)
@@ -73,6 +67,6 @@ export async function userRoutes(fastify: FastifyInstance) {
                 lastname: user.lastName,
                 id: user.id,
             })
-        }
+        },
     })
 }
