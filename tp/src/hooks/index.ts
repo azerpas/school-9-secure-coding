@@ -1,6 +1,6 @@
 import { EmailNotFound, IncorrectPassword, UserNotFound } from '@entities/user'
 import { PasswordDoesNotMatch } from '@lib/password'
-import { InvalidSessionError, SessionNotFoundError } from '@lib/session'
+import { InvalidSessionError, SessionExpiredError, SessionNotFoundError } from '@lib/session'
 import { ValidationError } from 'class-validator'
 import {
     FastifyError,
@@ -40,7 +40,8 @@ export const errorHandler = (
     }
     if (
         error instanceof SessionNotFoundError ||
-        error instanceof InvalidSessionError
+        error instanceof InvalidSessionError ||
+        error instanceof SessionExpiredError
     ) {
         void reply.status(401).send({ error: error.message })
     }
