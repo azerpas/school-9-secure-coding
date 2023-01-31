@@ -1,10 +1,5 @@
-import {
-    IncorrectPassword,
-    Session,
-    User,
-    UserNotFound,
-} from '@entities/index'
-import { saveSession, SessionNotFoundError } from '@lib/session'
+import { IncorrectPassword, User, UserNotFound } from '@entities/index'
+import { saveSession } from '@lib/session'
 import { getAppDataSourceInitialized } from '@lib/typeorm'
 import { createSessionRequestBody } from '@schemas/json'
 import { CreateSessionRequestBody } from '@schemas/types'
