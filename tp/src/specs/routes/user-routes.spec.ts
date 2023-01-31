@@ -31,16 +31,6 @@ describe('Users (/users)', function () {
     })
 
     describe('POST', function () {
-        // let datasource: DataSource
-
-        // before(async function () {
-        //     datasource = await getAppDataSourceInitialized()
-        // })
-
-        // beforeEach(async function () {
-        //     await datasource.getRepository(User).delete({})
-        // })
-
         it('should register the user', async function () {
             const password = faker.internet.password(20)
             const payload: CreateUserRequestBody = {
@@ -126,7 +116,6 @@ describe('Users (/users)', function () {
             const mockUser = await createUserFixture()
             const session = await createSessionFixture({
                 user: mockUser,
-
             })
             return { mockUser, session }
         }
@@ -180,7 +169,9 @@ describe('Users (/users)', function () {
         it('should respond with 401 if session has expired', async () => {
             const { session } = await createUserAndSessionFixture()
             // Mock expired session
-            const expiredSession = await datasource.getRepository(Session).save({...session, expiresAt: new Date(Date.now() - 10000)})
+            const expiredSession = await datasource
+                .getRepository(Session)
+                .save({ ...session, expiresAt: new Date(Date.now() - 10000) })
             const response = await server.inject({
                 url: '/users/me',
                 method: 'GET',
@@ -192,7 +183,9 @@ describe('Users (/users)', function () {
         it('should respond with 401 if session has been revoked', async () => {
             const { session } = await createUserAndSessionFixture()
             // Mock revoked session
-            const revokedSession = await datasource.getRepository(Session).save({...session, revokedAt: new Date()})
+            const revokedSession = await datasource
+                .getRepository(Session)
+                .save({ ...session, revokedAt: new Date() })
             const response = await server.inject({
                 url: '/users/me',
                 method: 'GET',
