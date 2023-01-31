@@ -1,6 +1,5 @@
 {
     "$schema": "http://json-schema.org/schema",
-    "$id": "user-show-response.json",
     "type": "object",
     "title": "UserShowResponse",
     "properties": {

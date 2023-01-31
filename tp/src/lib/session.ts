@@ -49,7 +49,7 @@ export async function saveSession(reply: FastifyReply, user: User) {
  */
 export async function loadSession(request: FastifyRequest) {
     const cookie = request.cookies['session']
-    if (!cookie) throw new InvalidSessionError('Missing token')
+    if (!cookie) return
     const result = request.unsignCookie(cookie)
     if (!result.valid || !result.value) throw new InvalidSessionError('Invalid token')
     const token = result.value
