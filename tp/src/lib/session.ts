@@ -72,7 +72,4 @@ export async function loadSession(request: FastifyRequest) {
     if (session.expiresAt < new Date()) throw new SessionExpiredError('Session expired')
     request.session = session
     request.user = session.user
-    console.log('Session loaded')
-    console.log(request.session)
-    console.log(request.user)
 }

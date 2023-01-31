@@ -1,17 +1,16 @@
 // tp2 Exercice 2 test case
 import { server } from '@lib/fastify'
-import { User } from '@entities/user'
 import { expect } from 'chai'
 import { CreateUserRequestBody, CreateUserResponseBody } from '@schemas/types'
 import { faker } from '@faker-js/faker'
 import { getAppDataSourceInitialized } from '@lib/typeorm'
 import { DataSource } from 'typeorm'
 import * as chai from 'chai'
-import { loadSession, saveSession } from '@lib/session'
 import { deleteAllTables } from 'specs/entities'
 import { buildUserFixture, createUserFixture } from '../fixtures/users-fixtures'
 import { createSessionFixture, loginAs } from '../fixtures/sessions-fixtures'
 import { sign } from '@fastify/cookie'
+import { Session, User } from '@entities/index'
 
 describe('Users (/users)', function () {
     let datasource: DataSource
@@ -127,6 +126,7 @@ describe('Users (/users)', function () {
             const mockUser = await createUserFixture()
             const session = await createSessionFixture({
                 user: mockUser,
+
             })
             return { mockUser, session }
         }
@@ -177,7 +177,17 @@ describe('Users (/users)', function () {
             expect(response.statusCode).to.equal(401)
         })
 
-        it('should respond with 401 if session has expired')
+        it('should respond with 401 if session has expired', async () => {
+            const { session } = await createUserAndSessionFixture()
+            // Mock expired session
+            const expiredSession = await datasource.getRepository(Session).save({...session, expiresAt: new Date(Date.now() - 10000)})
+            const response = await server.inject({
+                url: '/users/me',
+                method: 'GET',
+                cookies: loginAs(expiredSession),
+            })
+            expect(response.statusCode).to.equal(401)
+        })
 
         it('should respond with 401 if session has been revoked')
     })
