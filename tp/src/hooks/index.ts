@@ -1,6 +1,13 @@
-import { ValidationError } from "class-validator"
-import { FastifyError, FastifyReply, FastifyRequest, RouteOptions } from "fastify"
-import { EntityNotFoundError } from "typeorm"
+import { EmailNotFound, IncorrectPassword, UserNotFound } from '@entities/user'
+import { PasswordDoesNotMatch } from '@lib/password'
+import { ValidationError } from 'class-validator'
+import {
+    FastifyError,
+    FastifyReply,
+    FastifyRequest,
+    RouteOptions,
+} from 'fastify'
+import { EntityNotFoundError } from 'typeorm'
 
 export class MissingValidationSchemaError extends Error {
     constructor(message: string) {
@@ -10,9 +17,13 @@ export class MissingValidationSchemaError extends Error {
 }
 
 // Exercise 6
-export async function checkSchemaBodyQueryParamsHook(routeOptions: RouteOptions) {
+export async function checkSchemaBodyQueryParamsHook(
+    routeOptions: RouteOptions
+) {
     if (!routeOptions.schema)
-        throw new MissingValidationSchemaError(`A validation schema is required for the route ${routeOptions.url}`)
+        throw new MissingValidationSchemaError(
+            `A validation schema is required for the route ${routeOptions.url}`
+        )
 }
 
 export const errorHandler = (
@@ -26,7 +37,17 @@ export const errorHandler = (
     if (error instanceof ValidationError) {
         void reply.status(400).send({ error: error.constraints })
     }
-    if (error instanceof EntityNotFoundError) {
+    if (
+        error instanceof IncorrectPassword ||
+        error instanceof PasswordDoesNotMatch
+    ) {
+        void reply.status(403).send({ error: error.message })
+    }
+    if (
+        error instanceof EntityNotFoundError ||
+        error instanceof UserNotFound ||
+        error instanceof EmailNotFound
+    ) {
         void reply.status(404).send({ error: error.message })
     }
     if (process.env.NODE_ENV === 'production' && reply.statusCode >= 500) {

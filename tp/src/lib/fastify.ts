@@ -1,12 +1,11 @@
-import fastify, {
-    RouteOptions
-} from 'fastify'
+import fastify, { RouteOptions } from 'fastify'
 import cookie, { FastifyCookieOptions } from '@fastify/cookie'
 import { userRoutes } from '@routes/users'
-import {
-    checkSchemaBodyQueryParamsHook,
-    errorHandler
-} from '@hooks/index'
+import { checkSchemaBodyQueryParamsHook, errorHandler } from '@hooks/index'
+import { sessionRoutes } from '@routes/sessions'
+
+if (!process.env.COOKIE_SECRET)
+    throw new Error('Missing COOKIE_SECRET env variable')
 
 export const server = fastify({
     logger: true,
@@ -17,8 +16,11 @@ export const server = fastify({
         },
     },
 }) // TODO: replace with a real secret dotenv variable
-    .register(cookie, { secret: 'my-secret' } as FastifyCookieOptions)
+    .register(cookie, {
+        secret: process.env.COOKIE_SECRET,
+    } as FastifyCookieOptions)
     .register(userRoutes, { prefix: '/users' })
+    .register(sessionRoutes, { prefix: '/sessions' })
     .decorateRequest('session', null)
     .addHook('onRoute', checkSchemaBodyQueryParamsHook)
     // .addHook('onRoute', assertsResponseSchemaPresenceHook)
