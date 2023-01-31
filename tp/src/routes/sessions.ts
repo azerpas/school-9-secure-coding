@@ -1,11 +1,9 @@
 import {
-    EmailNotFound,
     IncorrectPassword,
-    Session,
     User,
     UserNotFound,
 } from '@entities/index'
-import { PasswordDoesNotMatch } from '@lib/password'
+import { saveSession } from '@lib/session'
 import { getAppDataSourceInitialized } from '@lib/typeorm'
 import { createSessionRequestBody } from '@schemas/json'
 import { CreateSessionRequestBody } from '@schemas/types'
@@ -20,27 +18,16 @@ export async function sessionRoutes(fastify: FastifyInstance) {
             const datasource = await getAppDataSourceInitialized()
             const user = await datasource
                 .getRepository(User)
-                .findOneBy({ email: request.body.email })
+                .findOneBy({ email: request.body.email  })
             if (!user) throw new UserNotFound('User could not be found')
 
             const isValidPassword = await user.isPasswordValid(
-                request.body.password
+                request.body.password 
             )
-
             if (!isValidPassword)
                 throw new IncorrectPassword('Password is incorrect')
 
-            const session = datasource.getRepository(Session).create()
-            session.user = user
-
-            await datasource.getRepository(Session).save(session)
-
-            return reply.setCookie('session', session.token, {
-                path: '/',
-                signed: true,
-                domain: 'localhost',
-                httpOnly: true,
-            })
+            return saveSession(reply, user)
         },
     })
 }
