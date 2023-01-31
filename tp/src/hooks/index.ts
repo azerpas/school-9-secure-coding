@@ -1,5 +1,6 @@
 import { EmailNotFound, IncorrectPassword, UserNotFound } from '@entities/user'
 import { PasswordDoesNotMatch } from '@lib/password'
+import { InvalidSessionError, SessionNotFoundError } from '@lib/session'
 import { ValidationError } from 'class-validator'
 import {
     FastifyError,
@@ -36,6 +37,9 @@ export const errorHandler = (
     }
     if (error instanceof ValidationError) {
         void reply.status(400).send({ error: error.constraints })
+    }
+    if (error instanceof SessionNotFoundError || error instanceof InvalidSessionError) {
+        void reply.status(401).send({ error: error.message })
     }
     if (
         error instanceof IncorrectPassword ||

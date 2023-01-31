@@ -18,6 +18,12 @@ export class InvalidSessionError extends Error {
     }
 }
 
+export class SessionNotFoundError extends Error {
+    constructor(message: string) {
+        super(message)
+        this.name = 'SessionNotFoundError'
+    }
+}
 
 export async function saveSession(reply: FastifyReply, user: User) {
     const datasource = await getAppDataSourceInitialized()
@@ -49,7 +55,7 @@ export async function loadSession(request: FastifyRequest) {
     const token = result.value
     const datasource = await getAppDataSourceInitialized()
     const session = await datasource.getRepository(Session).findOneBy({ token })
-    if (!session) throw new InvalidSessionError('Session could not be found')
+    if (!session) throw new SessionNotFoundError('Session could not be found')
     request.session = session
     request.user = session.user
 }
