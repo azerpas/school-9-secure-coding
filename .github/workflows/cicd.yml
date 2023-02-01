@@ -2,9 +2,9 @@ name: Docker Image CI
 
 on:
   push:
-    branches: [ "school-9-devops" ]
+    branches: [ "school-9-devops-deploy-test" ]
   pull_request:
-    branches: [ "school-9-devops" ]
+    branches: [ "school-9-devops-deploy-test" ]
 
 jobs:
   unit-tests:
@@ -52,3 +52,49 @@ jobs:
         password: ${{ secrets.DOCKERHUB_TOKEN }}
     - name: Push the Docker image to Hub Registery
       run: docker push azerpas/school-9-secure-coding:${{ steps.date.outputs.date }}
+      id: docker
+  hello:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+    steps:
+    - uses: 'google-github-actions/auth@v1'
+      with:
+        workload_identity_provider: 'projects/829008684096/locations/global/workloadIdentityPools/my-workload-identity-pool'
+        service_account: '829008684096-compute@developer.gserviceaccount.com'
+        project_id: 'single-shadow-375115'
+    - uses: 'google-github-actions/deploy-cloudrun@v1'
+      with:
+        image: 'gcr.io/cloudrun/hello'
+        service: 'hello-cloud-run'
+  # deploy-database:
+  #   steps:
+  #   - uses: 'actions/checkout@v3'
+  #   - uses: 'google-github-actions/auth@v1'
+  #     with:
+  #       workload_identity_provider: 'projects/123456789/locations/global/workloadIdentityPools/my-pool/providers/my-provider'
+  #       service_account: 'my-service-account@my-project.iam.gserviceaccount.com'
+  #   - id: 'deploy-db'
+  #     uses: 'google-github-actions/deploy-cloudrun@v1'
+  #     with:
+  #       service: 'postgres-db'
+  #       image: 'gcr.io/cloudrun/hello'
+  #       env_vars:
+  #         POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
+  #         POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
+  #         POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+  #         POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+  #         POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          
+  #   - name: 'Use output'
+  #     run: 'curl "${{ steps.deploy.outputs.url }}"'
+  # deploy:
+  #   needs: build
+  #   steps:
+  #     - uses: 'actions/checkout@v3'
+  #     - uses: 'google-github-actions/auth@v1'
+  #       with:
+  #         workload_identity_provider: 'projects/123456789/locations/global/workloadIdentityPools/my-pool/providers/my-provider'
+  #         service_account: 'my-service-account@my-project.iam.gserviceaccount.com'
+    
