@@ -1,1 +1,1 @@
-export * from './UniqueInColumn';
+export * from './UniqueInColumn'

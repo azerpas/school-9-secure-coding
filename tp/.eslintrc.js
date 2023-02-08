@@ -4,7 +4,9 @@ module.exports = {
   parser: '@typescript-eslint/parser',
   plugins: [ '@typescript-eslint' ],
   parserOptions: {
-    project: './tsconfig.json'
+    project: './tsconfig.json',
+    tsconfigRootDir: __dirname,
+    sourceType: 'module'
   },
   extends: [
     'eslint:recommended',
@@ -22,6 +24,11 @@ module.exports = {
     // PS: a better alternative would be the `unknown` type and turn the rule on again.
     '@typescript-eslint/no-explicit-any': 'off',
 
+    // I use async on all funcions handled by fastify for now. I have to check before changing this.
+    '@typescript-eslint/require-await': 'off',
+
     // Feel free to enable/disable some rules depending on your needs.
+    'indent': [ 'error', 4, { "ignoredNodes": ["PropertyDefinition"]} ],
+    'semi': [ 'error', 'never' ],
   }
 }
