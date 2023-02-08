@@ -2,9 +2,9 @@ name: Docker Image CI
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "school-9-devops-deploy-test" ]
   pull_request:
-    branches: [ "master" ]
+    branches: [ "school-9-devops-deploy-test" ]
 
 jobs:
   unit-tests:
