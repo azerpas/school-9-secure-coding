@@ -24,10 +24,15 @@ rule_files:
 # la scrape configuration de prometheus, les hosts qu'il va contacter pour chercher les métrique
 scrape_configs:
 
-  - job_name: 'localhost'     # <-- j'ai mis ce titre de job mais le truc c'est de mettre un nom de job explicite
+  - job_name: 'users route'     # <-- j'ai mis ce titre de job mais le truc c'est de mettre un nom de job explicite
     static_configs:
-      - targets: ['127.0.0.1:9100']
+      - targets: ['127.0.0.1:5432']
     scrape_interval: 5s
+
+  - web:
+    cors_allowed_origins:
+    - "http://localhost:3000"
+    
 
     ### configuration de blackbox, notre probe http 
 

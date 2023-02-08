@@ -79,7 +79,7 @@ services:
             - ./grafana/dashboards:/var/lib/grafana/dashboards
         network_mode: 'bridge'
         ports:
-            - '3005:3005'
+            - '3000:3000'
 
     blackbox:
         image: prom/blackbox-exporter:v0.14.0
