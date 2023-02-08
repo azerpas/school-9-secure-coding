@@ -60,7 +60,7 @@ services:
             - '--config.file=/etc/alertmanager/alertmanager.yml'
         network_mode: 'bridge'
         ports:
-            - '9093:9093'
+            - '127.0.0.1:9093:9093'
 
     grafana:
         image: grafana/grafana:6.2.5
@@ -79,7 +79,7 @@ services:
             - ./grafana/dashboards:/var/lib/grafana/dashboards
         network_mode: 'bridge'
         ports:
-            - '3000:3000'
+            - '127.0.0.1:3000:3000'
 
     blackbox:
         image: prom/blackbox-exporter:v0.14.0
@@ -90,7 +90,7 @@ services:
             - ./blackbox:/config
         network_mode: 'bridge'
         ports:
-            - '9115:9115'
+            - '127.0.0.1:9115:9115'
 
     node_exporter:
         image: prom/node-exporter:v0.18.1
@@ -99,7 +99,7 @@ services:
             replicas: 1
         network_mode: 'bridge'
         ports:
-            - '9100:9100'
+            - '127.0.0.1:9100:9100'
 
 volumes:
     prometheus-data:
