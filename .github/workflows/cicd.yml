@@ -73,7 +73,7 @@ jobs:
           uses: google-github-actions/deploy-cloudrun@v0
           with:
             service: "postgres-db"
-            image: "us-east1-docker.pkg.dev/postgres:latest"
+            image: "docker.io/azerpas/school-9-secure-coding:${{ steps.date.outputs.date }}"
 
         # If required, use the Cloud Run url output in later steps
         - name: Show Output
