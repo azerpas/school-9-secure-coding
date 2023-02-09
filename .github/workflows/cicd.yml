@@ -75,6 +75,9 @@ jobs:
         uses: "google-github-actions/auth@v0"
         with:
           credentials_json: "${{ secrets.GOOGLE_CREDENTIALS }}"
+          project_id: "${{ env.PROJECT_ID }}"
+      - name: Configure Docker
+        run: gcloud auth configure-docker --quiet
 
       - name: pull image from docker hub
         run: docker pull azerpas/school-9-secure-coding:2023-02-08T144624
