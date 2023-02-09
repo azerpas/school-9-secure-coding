@@ -79,9 +79,9 @@ jobs:
       - name: pull image from docker hub
         run: docker pull azerpas/school-9-secure-coding:2023-02-08T144624
       - name: tag image
-        run: docker tag school-9-secure-coding:2023-02-08T144624 gcr.io/school-9-secure-coding:2023-02-08T144624
+        run: docker tag azerpas/school-9-secure-coding:2023-02-08T144624 gcr.io/azerpas/school-9-secure-coding:2023-02-08T144624
       - name: push to registry
-        run: docker push gcr.io/school-9-secure-coding:2023-02-08T144624
+        run: docker push gcr.io/azerpas/school-9-secure-coding:2023-02-08T144624
       - name: Deploy to Cloud Run
         id: deploy
         uses: google-github-actions/deploy-cloudrun@v0
