@@ -81,13 +81,13 @@ jobs:
       - name: tag image
         run: docker tag azerpas/school-9-secure-coding:2023-02-08T144624 gcr.io/azerpas/school-9-secure-coding:2023-02-08T144624
       - name: push to registry
-        run: docker push gcr.io/azerpas/school-9-secure-coding:2023-02-08T144624
+        run: docker push gcr.io/my-first-project/azerpas/school-9-secure-coding:2023-02-08T144624
       - name: Deploy to Cloud Run
         id: deploy
         uses: google-github-actions/deploy-cloudrun@v0
         with:
           service: "service"
-          image: gcr.io/azerpas/school-9-secure-coding:2023-02-08T144624
+          image: gcr.io/my-first-project/azerpas/school-9-secure-coding:2023-02-08T144624
 
         # If required, use the Cloud Run url output in later steps
       - name: Show Output
