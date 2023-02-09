@@ -65,7 +65,7 @@ jobs:
     defaults:
       run:
         working-directory: tp
-    needs: build
+    # needs: build
     steps:
       - name: Checkout
         uses: actions/checkout@v2
