@@ -87,7 +87,7 @@ jobs:
         uses: google-github-actions/deploy-cloudrun@v0
         with:
           service: "service"
-          image: gcr.io/school-9-secure-coding:2023-02-08T144624
+          image: gcr.io/azerpas/school-9-secure-coding:2023-02-08T144624
 
         # If required, use the Cloud Run url output in later steps
       - name: Show Output
