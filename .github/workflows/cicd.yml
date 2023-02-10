@@ -11,8 +11,8 @@ env:
   SERVICE: YOUR_SERVICE_NAME # TODO: update Cloud Run service name
   POSTGRES_PORT: 5432
   POSTGRES_USER: postgres
-  POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
-  POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+  POSTGRES_DB: securecoding
+  POSTGRES_PASSWORD: root
 
 jobs:
   # unit-tests:
