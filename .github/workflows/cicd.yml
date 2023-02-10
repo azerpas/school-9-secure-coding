@@ -56,7 +56,7 @@ jobs:
   #         password: ${{ secrets.DOCKERHUB_TOKEN }}
   #     - name: Push the Docker image to Hub Registery
   #       run: docker push azerpas/school-9-secure-coding:${{ steps.date.outputs.date }}
-  deploy:
+  deploy-db:
       # Add 'id-token' with the intended permissions for workload identity federation
     permissions:
       contents: "read"
@@ -76,22 +76,62 @@ jobs:
         with:
           credentials_json: "${{ secrets.GOOGLE_CREDENTIALS }}"
           project_id: "${{ env.PROJECT_ID }}"
+          
       - name: Configure Docker
         run: gcloud auth configure-docker --quiet
 
       - name: pull image from docker hub
-        run: docker pull azerpas/school-9-secure-coding:2023-02-08T144624
+        run: docker pull postgres
       - name: tag image
-        run: docker tag azerpas/school-9-secure-coding:2023-02-08T144624 gcr.io/single-shadow-375115/azerpas/school-9-secure-coding:2023-02-08T144624
+        run: docker tag postgres gcr.io/single-shadow-375115/postgres
       - name: push to registry
-        run: docker push gcr.io/single-shadow-375115/azerpas/school-9-secure-coding:2023-02-08T144624
-      - name: Deploy to Cloud Run
+        run: docker push gcr.io/single-shadow-375115/postgres
         id: deploy
         uses: google-github-actions/deploy-cloudrun@v0
         with:
           service: "service"
-          image: gcr.io/single-shadow-375115/azerpas/school-9-secure-coding:2023-02-08T144624
+          image: gcr.io/single-shadow-375115/postgres
 
         # If required, use the Cloud Run url output in later steps
       - name: Show Output
         run: echo ${{ steps.deploy.outputs.url }}
+  # deploy:
+  #     # Add 'id-token' with the intended permissions for workload identity federation
+  #   permissions:
+  #     contents: "read"
+  #     id-token: "write"
+  #   runs-on: ubuntu-latest
+  #   defaults:
+  #     run:
+  #       working-directory: tp
+  #   # needs: build
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v2
+
+  #     - name: Google Auth
+  #       id: auth
+  #       uses: "google-github-actions/auth@v0"
+  #       with:
+  #         credentials_json: "${{ secrets.GOOGLE_CREDENTIALS }}"
+  #         project_id: "${{ env.PROJECT_ID }}"
+          
+  #     - name: Configure Docker
+  #       run: gcloud auth configure-docker --quiet
+
+  #     - name: pull image from docker hub
+  #       run: docker pull azerpas/school-9-secure-coding:2023-02-08T144624
+  #     - name: tag image
+  #       run: docker tag azerpas/school-9-secure-coding:2023-02-08T144624 gcr.io/single-shadow-375115/azerpas/school-9-secure-coding:2023-02-08T144624
+  #     - name: push to registry
+  #       run: docker push gcr.io/single-shadow-375115/azerpas/school-9-secure-coding:2023-02-08T144624
+  #     - name: Deploy to Cloud Run
+  #       id: deploy
+  #       uses: google-github-actions/deploy-cloudrun@v0
+  #       with:
+  #         service: "service"
+  #         image: gcr.io/single-shadow-375115/azerpas/school-9-secure-coding:2023-02-08T144624
+
+  #       # If required, use the Cloud Run url output in later steps
+  #     - name: Show Output
+  #       run: echo ${{ steps.deploy.outputs.url }}
