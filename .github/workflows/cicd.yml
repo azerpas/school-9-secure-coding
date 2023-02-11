@@ -112,6 +112,9 @@ jobs:
     name: Setup, Build, Publish, and Deploy
     runs-on: ubuntu-latest
     environment: production
+    defaults:
+      run:
+        working-directory: tp
 
     steps:
     - name: Checkout
@@ -157,18 +160,17 @@ jobs:
         sudo mv ./kompose /usr/local/bin/kompose
 
     - name: create directory
-      run: |- 
-        pwd
-        ls -la
-        mkdir -p ./tp/kubernetes
+      run: |-
+        mkdir -p kubernetes
 
     # Deploy the Docker image to the GKE cluster
     - name: create deployment files and deploy
       run: |-
-        pwd
-        ls -la
-        kompose convert -f ../docker-compose-production.yml
-      working-directory: ./kubernetes
+        kompose convert -f docker-compose-production.yml
+        
+    - name: List files in the repository
+      run: |
+          ls ${{ github.workspace }}
   # deploy:
   #     # Add 'id-token' with the intended permissions for workload identity federation
   #   permissions:
