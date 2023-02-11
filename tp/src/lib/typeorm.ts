@@ -18,7 +18,6 @@ export const getAppDataSource = (): DataSource => {
     else {
         if (!appDataSource) {
             const port = process.env.NODE_ENV === "test" ? process.env.POSTGRES_TEST_PORT : process.env.POSTGRES_PORT
-
             appDataSource = new DataSource({
                 type: "postgres",
                 host: process.env.POSTGRES_HOST,
