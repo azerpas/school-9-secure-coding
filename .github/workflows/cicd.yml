@@ -157,13 +157,17 @@ jobs:
         sudo mv ./kompose /usr/local/bin/kompose
 
     - name: create directory
-      run: mkdir -p ./tp/kubernetes
+      run: |- 
+        pwd
+        ls -la
+        mkdir -p ./tp/kubernetes
 
     # Deploy the Docker image to the GKE cluster
     - name: create deployment files and deploy
       run: |-
-        kompose convert -f ../docker-compose-production.yml
+        pwd
         ls -la
+        kompose convert -f ../docker-compose-production.yml
       working-directory: ./kubernetes
   # deploy:
   #     # Add 'id-token' with the intended permissions for workload identity federation
