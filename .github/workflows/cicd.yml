@@ -167,10 +167,10 @@ jobs:
     - name: create deployment files and deploy
       run: |-
         kompose convert -f docker-compose-production.yml
-        
+
     - name: List files in the repository
       run: |
-          ls ${{ github.workspace }}
+          ls ${{ github.workspace }}/tp/kubernetes
   # deploy:
   #     # Add 'id-token' with the intended permissions for workload identity federation
   #   permissions:
