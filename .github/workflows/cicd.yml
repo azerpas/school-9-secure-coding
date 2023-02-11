@@ -108,7 +108,7 @@ jobs:
   #     - name: Show Output
   #       run: echo ${{ steps.deploy.outputs.url }}
 
-setup-build-publish-deploy:
+  setup-build-publish-deploy:
     name: Setup, Build, Publish, and Deploy
     runs-on: ubuntu-latest
     environment: production
