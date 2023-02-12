@@ -1,10 +1,10 @@
 global:
   scrape_interval:     15s # Par défaut prometheus va scrapper les cibles toutes les 15 secondes
-
+  evaluation_interval: 15s
   # Attach these labels to any time series or alerts when communicating with
   # external systems (federation, remote storage, Alertmanager).
   external_labels:
-    env: 'infrastructure'   # C'est simplement le nom de votre environnement
+    env: 'infrastructure'   # le nom de votre environnement
 
 # spécification du serveur alertmanager
 
@@ -12,7 +12,7 @@ alerting:
   alertmanagers:
   - static_configs:
     - targets:
-      - localhost:9093
+      - 127.0.0.1:9093
     scheme: http
     timeout: 10s
 
@@ -26,14 +26,21 @@ scrape_configs:
 
   - job_name: 'users route'     # <-- j'ai mis ce titre de job mais le truc c'est de mettre un nom de job explicite
     static_configs:
-      - targets: ['127.0.0.1:5432']
+      - targets: ['host.docker.internal:5432']
     scrape_interval: 5s
 
-  - web:
-    cors_allowed_origins:
-    - "http://localhost:3000"
-    
+  - job_name: 'prometheus' 
+    static_configs: 
+      - targets: ['host.docker.internal:9090'] ## IP Address of the localhost
 
+  - job_name: 'node-exporter' 
+    static_configs: 
+      - targets: ['host.docker.internal:9100'] ## IP Address of the localhost
+
+  
+  - job_name: postgres-exporter
+    static_configs:
+        - targets: ['host.docker.internal:9187']
     ### configuration de blackbox, notre probe http 
 
   - job_name: 'blackbox'
@@ -48,8 +55,8 @@ scrape_configs:
       - source_labels: [__address__]
         target_label: instance
       - target_label: __address__
-        replacement: localhost:9115  # The blackbox exporter's real hostname:port.
+        replacement: host.docker.internal:9115  # The blackbox exporter's real hostname:port.
 
     static_configs:
       - targets: 
-        - http://localhost:9090,prometheus
+        - host.docker.internal:9090,prometheus
