@@ -9,7 +9,6 @@ services:
       - POSTGRES_USER=${POSTGRES_USER}  
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=${POSTGRES_DB}
-    network_mode: host
     ports:
       - 80:5432
     volumes:
@@ -19,12 +18,17 @@ services:
 
   pgadmin:
     image: dpage/pgadmin4
-    links:
-      - postgres
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@admin.com
       PGADMIN_DEFAULT_PASSWORD: privatepassword
     ports:
       - 80:80
     labels:
-      - kompose.service.type=loadbalancer
+      kompose.service.type: loadbalancer
+      kompose.service.healthcheck.liveness.http_get_path: /health/ping
+      kompose.service.healthcheck.liveness.http_get_port: 8080
+    healthcheck:
+      interval: 10s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
