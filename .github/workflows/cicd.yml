@@ -160,7 +160,15 @@ jobs:
         sudo mv ./kompose /usr/local/bin/kompose
 
 
-    -name: create directory kubernetes
+    - name: export env variable
+      run: |-
+        export POSTGRES_PASSWORD=${{ env.POSTGRES_PASSWORD }}
+        export POSTGRES_USER=${{ env.POSTGRES_USER }}
+        export POSTGRES_DB=${{ env.POSTGRES_DB }}
+        export POSTGRES_PORT=${{ env.POSTGRES_PORT }}
+        export POSTGRES_HOST=${{ env.POSTGRES_HOST }}
+
+    - name: create directory kubernetes
       run: |- 
         mkdir kubernetes
 
@@ -176,7 +184,8 @@ jobs:
 
     - name: kubernetes deploy
       run: |
-        kubectl apply -f ${{ github.workspace }}/tp/kubernetes
+        kubectl apply -f .
+      working-directory: ${{ github.workspace }}/tp/kubernetes
 
   #     # Add 'id-token' with the intended permissions for workload identity federation
   #   permissions:
