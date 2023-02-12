@@ -22,13 +22,8 @@ services:
       PGADMIN_DEFAULT_EMAIL: admin@admin.com
       PGADMIN_DEFAULT_PASSWORD: privatepassword
     ports:
-      - 80:80
+      - 8080:80
     labels:
-      kompose.service.type: loadbalancer
-      kompose.service.healthcheck.liveness.http_get_path: /health/ping
-      kompose.service.healthcheck.liveness.http_get_port: 8080
-    healthcheck:
-      interval: 10s
-      timeout: 10s
-      retries: 3
-      start_period: 30s
+      - kompose.service.type=loadbalancer
+      - kompose.service.healthcheck.liveness.http_get_path:=/health/ping
+      - kompose.service.healthcheck.liveness.http_get_port=8080
