@@ -167,7 +167,11 @@ jobs:
     - name: List files in the repository
       run: |
           ls ${{ github.workspace }}/tp
-  # deploy:
+
+    - name: kubernetes deploy
+      run: |
+        kubectl apply -f ${{ github.workspace }}/tp
+        
   #     # Add 'id-token' with the intended permissions for workload identity federation
   #   permissions:
   #     contents: "read"
