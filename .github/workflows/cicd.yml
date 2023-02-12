@@ -167,6 +167,12 @@ jobs:
         export POSTGRES_DB=${{ env.POSTGRES_DB }}
         export POSTGRES_PORT=${{ env.POSTGRES_PORT }}
         export POSTGRES_HOST=${{ env.POSTGRES_HOST }}
+        echo $POSTGRES_PASSWORD
+        echo $POSTGRES_USER
+        echo $POSTGRES_DB
+        echo $POSTGRES_PORT
+        echo $POSTGRES_HOST
+        
 
     - name: create directory kubernetes
       run: |- 
