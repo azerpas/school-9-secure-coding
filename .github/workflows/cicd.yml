@@ -159,10 +159,6 @@ jobs:
         chmod +x kompose
         sudo mv ./kompose /usr/local/bin/kompose
 
-    - name: create directory
-      run: |-
-        mkdir -p kubernetes
-
     # Deploy the Docker image to the GKE cluster
     - name: create deployment files and deploy
       run: |-
@@ -170,7 +166,8 @@ jobs:
 
     - name: List files in the repository
       run: |
-          ls ${{ github.workspace }}/tp/kubernetes
+          ls ${{ github.workspace }}/tp
+      working-directory: kubernetes
   # deploy:
   #     # Add 'id-token' with the intended permissions for workload identity federation
   #   permissions:
