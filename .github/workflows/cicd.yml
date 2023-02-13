@@ -190,7 +190,7 @@ jobs:
 
     - name: kubernetes deploy
       run: |-
-        rm tp-default-networkpolicy
+        rm tp-default-networkpolicy.yaml
         kubectl apply -f .
       working-directory: ${{ github.workspace }}/tp/kubernetes
 
