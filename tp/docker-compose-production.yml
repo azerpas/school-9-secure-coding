@@ -25,7 +25,6 @@ services:
       - 8081:80
     labels:
       - kompose.service.type=loadbalancer
-
   hello-world:
     image: nginx
     ports:
