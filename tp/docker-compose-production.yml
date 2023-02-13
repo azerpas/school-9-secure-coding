@@ -22,6 +22,13 @@ services:
       PGADMIN_DEFAULT_EMAIL: admin@admin.com
       PGADMIN_DEFAULT_PASSWORD: privatepassword
     ports:
+      - 8081:80
+    labels:
+      - kompose.service.type=loadbalancer
+
+  hello-world:
+    image: nginx
+    ports:
       - 8080:80
     labels:
       - kompose.service.type=loadbalancer
