@@ -153,6 +153,7 @@ jobs:
     #     docker push "gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA"
 
     # Set up kustomize
+
     - name: Set up kompose
       run: |-
         curl -L https://github.com/kubernetes/kompose/releases/download/v1.28.0/kompose-linux-amd64 -o kompose
@@ -172,25 +173,18 @@ jobs:
         echo $POSTGRES_DB
         echo $POSTGRES_PORT
         echo $POSTGRES_HOST
-        
 
-#    - name: create directory kubernetes
-#      run: |- 
-#        mkdir kubernetes
-
-    # Deploy the Docker image to the GKE cluster
-#    - name: create deployment files and deploy
-#      run: |-
-#        kompose convert -f ../docker-compose-production.yml
-#      working-directory: ${{ github.workspace }}/tp/kubernetes
-
-    - name: List files in the repository
+    #Deploy the Docker image to the GKE cluster
+   - name: create deployment files and deploy
       run: |-
-          ls ${{ github.workspace }}/tp/kubernetes
+        kompose convert -f ../docker-compose-production.yml
+        ./cleanup.sh
+        ls ${{ github.workspace }}/tp/kubernetes
+
+     working-directory: ${{ github.workspace }}/tp/kubernetes
 
     - name: kubernetes deploy
       run: |-
-        rm tp-default-networkpolicy.yaml
         kubectl apply -f .
       working-directory: ${{ github.workspace }}/tp/kubernetes
 
