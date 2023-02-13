@@ -179,10 +179,10 @@ jobs:
 #        mkdir kubernetes
 
     # Deploy the Docker image to the GKE cluster
-    - name: create deployment files and deploy
-      run: |-
-        kompose convert -f ../docker-compose-production.yml
-      working-directory: ${{ github.workspace }}/tp/kubernetes
+#    - name: create deployment files and deploy
+#      run: |-
+#        kompose convert -f ../docker-compose-production.yml
+#      working-directory: ${{ github.workspace }}/tp/kubernetes
 
     - name: List files in the repository
       run: |-
