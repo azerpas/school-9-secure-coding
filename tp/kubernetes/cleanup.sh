@@ -1,7 +1,5 @@
 #!/bin/bash
 
-# Prompt user for the word to search for
-
 parent_name=$(basename $(dirname $(pwd)))
 
 rm -rf $parent_name-default-networkpolicy.yaml
