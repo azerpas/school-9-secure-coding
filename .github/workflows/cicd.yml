@@ -130,7 +130,6 @@ jobs:
     # helper for authentication
     - run: |-
         gcloud --quiet auth configure-docker
-
     # Get the GKE credentials so we can deploy to the cluster
     - uses: google-github-actions/get-gke-credentials@fb08709ba27618c31c09e014e1d8364b02e5042e
       with:
@@ -153,14 +152,11 @@ jobs:
     #     docker push "gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA"
 
     # Set up kustomize
-
     - name: Set up kompose
       run: |-
         curl -L https://github.com/kubernetes/kompose/releases/download/v1.28.0/kompose-linux-amd64 -o kompose
         chmod +x kompose
         sudo mv ./kompose /usr/local/bin/kompose
-
-
     - name: export env variable
       run: |-
         export POSTGRES_PASSWORD=${{ env.POSTGRES_PASSWORD }}
@@ -174,14 +170,14 @@ jobs:
         echo $POSTGRES_PORT
         echo $POSTGRES_HOST
 
-    #Deploy the Docker image to the GKE cluster
-   - name: create deployment files and deploy
+    # Deploy the Docker image to the GKE cluster
+    - name: create deployment files and deploy
       run: |-
         kompose convert -f ../docker-compose-production.yml
         ./cleanup.sh
         ls ${{ github.workspace }}/tp/kubernetes
 
-     working-directory: ${{ github.workspace }}/tp/kubernetes
+      working-directory: ${{ github.workspace }}/tp/kubernetes
 
     - name: kubernetes deploy
       run: |-
@@ -227,5 +223,3 @@ jobs:
   #       # If required, use the Cloud Run url output in later steps
   #     - name: Show Output
   #       run: echo ${{ steps.deploy.outputs.url }}
-
-  
