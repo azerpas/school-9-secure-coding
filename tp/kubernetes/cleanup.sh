@@ -6,6 +6,8 @@ parent_name=$(basename $(dirname $(pwd)))
 
 rm -rf $parent_name-default-networkpolicy.yaml
 
+word="io.kompose.network"
+
 # Loop through all files in the current directory
 for file in *; do
   # Find the line number of the occurrence of the word
