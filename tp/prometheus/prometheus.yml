@@ -12,7 +12,7 @@ alerting:
   alertmanagers:
   - static_configs:
     - targets:
-      - 127.0.0.1:9093
+      - ${ALERT_MANAGER_HOST}:9093
     scheme: http
     timeout: 10s
 
@@ -26,21 +26,21 @@ scrape_configs:
 
   - job_name: 'users route'     # <-- j'ai mis ce titre de job mais le truc c'est de mettre un nom de job explicite
     static_configs:
-      - targets: ['host.docker.internal:5432']
+      - targets: ['${POSTGRES_HOST}:5432']
     scrape_interval: 5s
 
   - job_name: 'prometheus' 
     static_configs: 
-      - targets: ['host.docker.internal:9090'] ## IP Address of the localhost
+      - targets: ['${PROMETHEUS_HOST}:9090'] ## IP Address of the localhost
 
   - job_name: 'node-exporter' 
     static_configs: 
-      - targets: ['host.docker.internal:9100'] ## IP Address of the localhost
+      - targets: ['${NODE_EXPORTER_HOST}:9100'] ## IP Address of the localhost
 
   
   - job_name: postgres-exporter
     static_configs:
-        - targets: ['host.docker.internal:9187']
+        - targets: ['${POSTGRES_NODE_EXPORTER_HOST}:9187']
     ### configuration de blackbox, notre probe http 
 
   - job_name: 'blackbox'
@@ -55,8 +55,8 @@ scrape_configs:
       - source_labels: [__address__]
         target_label: instance
       - target_label: __address__
-        replacement: host.docker.internal:9115  # The blackbox exporter's real hostname:port.
+        replacement: ${BLACKBOX_HOST}:9115  # The blackbox exporter's real hostname:port.
 
     static_configs:
       - targets: 
-        - host.docker.internal:9090,prometheus
+        - ${PROMETHEUS_HOST}:9090,prometheus
