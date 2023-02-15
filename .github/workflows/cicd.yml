@@ -20,6 +20,8 @@ env:
   IMAGE: static-site
   NAMESPACE_DB: postgresql
   service_name: postgres-service
+  COOKIE_SECRET: my_secret
+  COOKIE_NAME: my_cookie
 
 jobs:
   unit-tests:
