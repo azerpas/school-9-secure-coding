@@ -144,13 +144,13 @@ jobs:
 
     # wait for availability of external IP kubernetes deployment
     - name: Wait for Service IPs
-      id: wait-for-service-ips
       run: |
         service_ip=$(kubectl get service $service_name -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
         echo "::set-output name=${service_name}_ip::$service_ip"
 
     - name: pull image from docker hub
       run: docker pull azerpas/school-9-secure-coding:${{ steps.date.outputs.date }}
+      
     - name: tag image
       run: docker tag azerpas/school-9-secure-coding:${{ steps.date.outputs.date }} gcr.io/single-shadow-375115/azerpas/school-9-secure-coding:${{ steps.date.outputs.date }}
     - name: push to registry

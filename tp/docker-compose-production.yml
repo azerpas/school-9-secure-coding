@@ -41,11 +41,7 @@ services:
     depends_on:
       - prometheus
     volumes:
-      - grafana-data:/var/lib/grafana
-      - ./grafana/datasource.yml:/etc/grafana/provisioning/datasources/datasource.yml
-      - ./grafana/dashboards.yml:/etc/grafana/provisioning/dashboards/dashboards.yml
-      - ./grafana/grafana.ini:/etc/grafana/grafana.ini
-      - ./grafana/dashboards:/var/lib/grafana/dashboards
+      - ./grafana:/var/lib/grafana
     ports:
       - '3000:3000'
     labels:
