@@ -72,7 +72,7 @@ jobs:
     name: Setup, Build, Publish, and Deploy
     runs-on: ubuntu-latest
     environment: production
-    depends-on: build
+    needs: build
     defaults:
       run:
         working-directory: tp
