@@ -146,7 +146,6 @@ jobs:
     - name: Wait for Service IPs
       id: wait-for-service-ips
       run: |
-        kubectl wait --for=condition=available --timeout=3m service/$service_name
         service_ip=$(kubectl get service $service_name -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
         echo "::set-output name=${service_name}_ip::$service_ip"
 
