@@ -149,19 +149,18 @@ jobs:
         echo "::set-output name=${service_name}_ip::$service_ip"
 
     - name: pull image from docker hub
-      run: docker pull azerpas/school-9-secure-coding:${{ steps.date.outputs.date }}
-      
+      run: docker pull azerpas/school-9-secure-coding:2023-02-15T173848
+
     - name: tag image
-      run: docker tag azerpas/school-9-secure-coding:${{ steps.date.outputs.date }} gcr.io/single-shadow-375115/azerpas/school-9-secure-coding:${{ steps.date.outputs.date }}
+      run: docker tag azerpas/school-9-secure-coding:2023-02-15T173848 gcr.io/single-shadow-375115/azerpas/school-9-secure-coding:2023-02-15T173848
     - name: push to registry
-      run: docker push gcr.io/single-shadow-375115/azerpas/school-9-secure-coding:${{ steps.date.outputs.date }}
+      run: docker push gcr.io/single-shadow-375115/azerpas/school-9-secure-coding:2023-02-15T173848
 
     - name: Deploy to Cloud Run
       id: deploy
       run: |-
-        kubectl create deployment fastify-app --image=gcr.io/single-shadow-375115/azerpas/school-9-secure-coding:${{ steps.date.outputs.date }}
+        kubectl create deployment fastify-app --image=gcr.io/single-shadow-375115/azerpas/school-9-secure-coding:2023-02-15T173848
         kubectl expose deployment fastify-app --name=fastify-app --type=LoadBalancer --port 3000 --target-port 3000
-        
         
       # If required, use the Cloud Run url output in later steps
 
