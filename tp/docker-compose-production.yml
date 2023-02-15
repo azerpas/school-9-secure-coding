@@ -1,23 +1,35 @@
 version: '3.1'
 services:
 
-  # prometheus:
-  #   image: prom/prometheus:latest
-  #   container_name: prometheus
-  #   deploy:
-  #     replicas: 1
-  #   volumes:
-  #     - prometheus-data:/prometheus
-  #     - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
-  #     - ./alertmanager/alert.rules/alerts.rules.yml:/alertmanager/alert.rules/alerts.rules.yml
-  #   command:
-  #     - '--config.file=/etc/prometheus/prometheus.yml'
-  #     - '--storage.tsdb.path=/prometheus'
-  #     - '--storage.tsdb.retention.time=365d'
-  #   ports:
-  #     - '9090:9090'
-  #   labels:
-  #     - kompose.service.type=loadbalancer
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_USER: tutorial
+      POSTGRES_DB: iam
+      POSTGRES_PASSWORD: privatepassword
+    ports:
+      - 5432:5432
+    volumes:
+      - ./docker/postgres:/var/lib/postgresql/data
+
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    deploy:
+      replicas: 1
+    volumes:
+      - ./prometheus:/prometheus
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./alertmanager/alert.rules/alerts.rules.yml:/alertmanager/alert.rules/alerts.rules.yml
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention.time=365d'
+    ports:
+      - '9090:9090'
+    labels:
+      - kompose.service.type=loadbalancer
   
   alertmanager:
     image: prom/alertmanager:v0.18.0
@@ -77,17 +89,17 @@ services:
   #   labels:
   #     - kompose.service.type=loadbalancer
 
-  # postgres-exporter:
-  #   image: prometheuscommunity/postgres-exporter
-  #   ports:
-  #     - 9187:9187
-  #   environment:
-  #     DATA_SOURCE_NAME: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/iam?sslmode=disable
-  #   links:
-  #       - postgres
-  #       - prometheus
-  #   labels:
-  #     - kompose.service.type=loadbalancer
+  postgres-exporter:
+    image: prometheuscommunity/postgres-exporter
+    ports:
+      - 9187:9187
+    environment:
+      DATA_SOURCE_NAME: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/iam?sslmode=disable
+    links:
+        - postgres
+        - prometheus
+    labels:
+      - kompose.service.type=loadbalancer
 
   # pgadmin:
   #   image: dpage/pgadmin4
