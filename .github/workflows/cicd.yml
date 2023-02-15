@@ -155,6 +155,7 @@ jobs:
 
     - name: push pull db image from docker hub to artifact gcr registry
       run: |- 
+        chmod +x gcr.sh
         ./gcr.sh bitnami/postgresql-repmgr 15.1.0-debian-11-r0
         ./gcr.sh bitnami/postgres-exporter 0.11.1-debian-11-r27
         ./gcr.sh bitnami/pgpool 4.3.3-debian-11-r28
