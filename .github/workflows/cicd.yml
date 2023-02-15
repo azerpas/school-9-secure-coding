@@ -189,7 +189,7 @@ jobs:
     - name: Wait for Service IPs
       run: |
         SERVICE_NAMES=$(kubectl get services --output=jsonpath='{range .items[*]}{.metadata.name}{" "}{end}' | tr ' ' ',')
-        export SERVICE_NAMES=$SERVICE_NAMES"
+        export SERVICE_NAMES=$SERVICE_NAMES
         for service_name in $(echo $SERVICE_NAMES | tr ',' ' '); do
           kubectl wait --for=condition=available --timeout=2m service/$service_name
           service_ip=$(kubectl get service $service_name -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
