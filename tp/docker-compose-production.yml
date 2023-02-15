@@ -31,48 +31,48 @@ services:
     labels:
       - kompose.service.type=loadbalancer
 
-  # grafana:
-  #   image: grafana/grafana:latest
-  #   container_name: grafana
-  #   environment:
-  #     - GF_PATHS_CONFIG=/etc/grafana/grafana.ini
-  #   deploy:
-  #     replicas: 1
-  #   depends_on:
-  #     - prometheus
-  #   volumes:
-  #     - grafana-data:/var/lib/grafana
-  #     - ./grafana/datasource.yml:/etc/grafana/provisioning/datasources/datasource.yml
-  #     - ./grafana/dashboards.yml:/etc/grafana/provisioning/dashboards/dashboards.yml
-  #     - ./grafana/grafana.ini:/etc/grafana/grafana.ini
-  #     - ./grafana/dashboards:/var/lib/grafana/dashboards
-  #   ports:
-  #     - '3000:3000'
-  #   labels:
-  #     - kompose.service.type=loadbalancer
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    environment:
+      - GF_PATHS_CONFIG=/etc/grafana/grafana.ini
+    deploy:
+      replicas: 1
+    depends_on:
+      - prometheus
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./grafana/datasource.yml:/etc/grafana/provisioning/datasources/datasource.yml
+      - ./grafana/dashboards.yml:/etc/grafana/provisioning/dashboards/dashboards.yml
+      - ./grafana/grafana.ini:/etc/grafana/grafana.ini
+      - ./grafana/dashboards:/var/lib/grafana/dashboards
+    ports:
+      - '3000:3000'
+    labels:
+      - kompose.service.type=loadbalancer
 
-  # blackbox:
-  #   image: prom/blackbox-exporter:v0.14.0
-  #   container_name: blackbox_exporter
-  #   deploy:
-  #     replicas: 1
-  #   volumes:
-  #     - ./blackbox:/config
-  #   ports:
-  #     - '9115:9115'
-  #   labels:
-  #     - kompose.service.type=loadbalancer
+  blackbox:
+    image: prom/blackbox-exporter:v0.14.0
+    container_name: blackbox_exporter
+    deploy:
+      replicas: 1
+    volumes:
+      - ./blackbox:/config
+    ports:
+      - '9115:9115'
+    labels:
+      - kompose.service.type=loadbalancer
 
-  # node_exporter:
-  #   image: prom/node-exporter:v0.18.1
-  #   container_name: node_exporter
-  #   deploy:
-  #     replicas: 1
-  #   network_mode: 'bridge'
-  #   ports:
-  #     - '9100:9100'
-  #   labels:
-  #     - kompose.service.type=loadbalancer
+  node_exporter:
+    image: prom/node-exporter:v0.18.1
+    container_name: node_exporter
+    deploy:
+      replicas: 1
+    network_mode: 'bridge'
+    ports:
+      - '9100:9100'
+    labels:
+      - kompose.service.type=loadbalancer
 
   postgres-exporter:
     image: prometheuscommunity/postgres-exporter
