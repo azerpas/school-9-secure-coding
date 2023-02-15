@@ -103,18 +103,18 @@ services:
   #   labels:
   #     - kompose.service.type=loadbalancer
 
-  pgadmin:
-    image: dpage/pgadmin4
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@admin.com
-      PGADMIN_DEFAULT_PASSWORD: privatepassword
-    ports:
-      - 8081:80
-    labels:
-      - kompose.service.type=loadbalancer
+  # pgadmin:
+  #   image: dpage/pgadmin4
+  #   environment:
+  #     PGADMIN_DEFAULT_EMAIL: admin@admin.com
+  #     PGADMIN_DEFAULT_PASSWORD: privatepassword
+  #   ports:
+  #     - 8081:80
+  #   labels:
+  #     - kompose.service.type=loadbalancer
       
-volumes:
-  prometheus-data:
-    driver: local
-  grafana-data:
-    driver: local
+# volumes:
+#   prometheus-data:
+#     driver: local
+#   grafana-data:
+#     driver: local
