@@ -195,19 +195,19 @@ jobs:
         kubectl apply -f .
       working-directory: ${{ github.workspace }}/tp/kubernetes
 
-    # wait for availability of external IP kubernetes deployment
-    - name: Wait for Service IPs
-      run: |
-        SERVICE_NAMES=$(kubectl get services --output=jsonpath='{range .items[*]}{.metadata.name}{" "}{end}' | tr ' ' ',')
-        export SERVICE_NAMES=$SERVICE_NAMES
-        for service_name in $(echo $SERVICE_NAMES | tr ',' ' '); do
-          kubectl wait --for=condition=available --timeout=5m service/$service_name
-          service_ip=$(kubectl get service $service_name -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
-          echo "::set-output name=${service_name}_ip::$service_ip"
-        done
+    # # wait for availability of external IP kubernetes deployment
+    # - name: Wait for Service IPs
+    #   run: |
+    #     SERVICE_NAMES=$(kubectl get services --output=jsonpath='{range .items[*]}{.metadata.name}{" "}{end}' | tr ' ' ',')
+    #     export SERVICE_NAMES=$SERVICE_NAMES
+    #     for service_name in $(echo $SERVICE_NAMES | tr ',' ' '); do
+    #       kubectl wait --for=condition=available --timeout=5m service/$service_name
+    #       service_ip=$(kubectl get service $service_name -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+    #       echo "::set-output name=${service_name}_ip::$service_ip"
+    #     done
 
-    - name: Show Output
-      run: echo ${{ steps.deploy.outputs.url }}
+    # - name: Show Output
+    #   run: echo ${{ steps.deploy.outputs.url }}
 
 
   #     # Add 'id-token' with the intended permissions for workload identity federation
