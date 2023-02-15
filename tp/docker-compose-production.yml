@@ -1,19 +1,5 @@
 version: '3.1'
 services:
-  postgres:
-    image: postgres
-    environment:
-      - POSTGRES_HOST=${POSTGRES_HOST}
-      - POSTGRES_PORT=${POSTGRES_PORT}
-      - POSTGRES_USER=${POSTGRES_USER}  
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - POSTGRES_DB=${POSTGRES_DB}
-    ports:
-      - 5432:5432
-    volumes:
-      - ./docker/postgres:/var/lib/postgresql/data
-    labels:
-      - kompose.service.type=loadbalancer
 
   # prometheus:
   #   image: prom/prometheus:latest
@@ -33,20 +19,20 @@ services:
   #   labels:
   #     - kompose.service.type=loadbalancer
   
-  # alertmanager:
-  #   image: prom/alertmanager:v0.18.0
-  #   container_name: alertmanager
-  #   deploy:
-  #     replicas: 1
-  #   volumes:
-  #     - ./alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml
-  #     - ./alertmanager/templates/default.tmpl:/etc/alertmanager/templates/default.tmpl
-  #   command:
-  #     - '--config.file=/etc/alertmanager/alertmanager.yml'
-  #   ports:
-  #     - '9093:9093'
-  #   labels:
-  #     - kompose.service.type=loadbalancer
+  alertmanager:
+    image: prom/alertmanager:v0.18.0
+    container_name: alertmanager
+    deploy:
+      replicas: 1
+    volumes:
+      - ./alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml
+      - ./alertmanager/templates/default.tmpl:/etc/alertmanager/templates/default.tmpl
+    command:
+      - '--config.file=/etc/alertmanager/alertmanager.yml'
+    ports:
+      - '9093:9093'
+    labels:
+      - kompose.service.type=loadbalancer
 
   # grafana:
   #   image: grafana/grafana:latest
