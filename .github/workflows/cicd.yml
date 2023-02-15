@@ -18,6 +18,7 @@ env:
   GKE_ZONE: europe-west1   # Add your cluster zone here.
   DEPLOYMENT_NAME: gke-test # Add your deployment name here.
   IMAGE: static-site
+  NAMESPACE_DB: postgresql
 
 jobs:
   # unit-tests:
@@ -150,6 +151,14 @@ jobs:
     # - name: Publish
     #   run: |-
     #     docker push "gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA"
+
+
+    - name: push pull db image from docker hub to artifact gcr registry
+      run: |- 
+        ./gcr.sh bitnami/postgresql-repmgr 15.1.0-debian-11-r0
+        ./gcr.sh bitnami/postgres-exporter 0.11.1-debian-11-r27
+        ./gcr.sh bitnami/pgpool 4.3.3-debian-11-r28
+      working-directory: ${{ github.workspace }}/tp/kubernetes
 
     # Set up kustomize
     - name: Set up kompose
