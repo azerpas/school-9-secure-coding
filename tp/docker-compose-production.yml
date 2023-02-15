@@ -20,8 +20,6 @@ services:
       replicas: 1
     volumes:
       - ./prometheus:/prometheus
-      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
-      - ./alertmanager/alert.rules/alerts.rules.yml:/alertmanager/alert.rules/alerts.rules.yml
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--storage.tsdb.path=/prometheus'
@@ -38,7 +36,6 @@ services:
       replicas: 1
     volumes:
       - ./alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml
-      - ./alertmanager/templates/default.tmpl:/etc/alertmanager/templates/default.tmpl
     command:
       - '--config.file=/etc/alertmanager/alertmanager.yml'
     ports:
