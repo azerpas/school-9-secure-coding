@@ -2,9 +2,9 @@ name: Docker Image CI
 
 on:
   push:
-    branches: [ "school-9-devops-deploy-test" ]
+    branches: [ "school-9-devops" ]
   pull_request:
-    branches: [ "school-9-devops-deploy-test" ]
+    branches: [ "school-9-devops" ]
 
 env:
   PROJECT_ID: single-shadow-375115 # TODO: update Google Cloud project id
